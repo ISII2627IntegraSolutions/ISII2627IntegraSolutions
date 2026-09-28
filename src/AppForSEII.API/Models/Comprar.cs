@@ -6,12 +6,12 @@ namespace AppForSEII.API.Models
         {
             
         }
-        public Comprar(string CompradorUserName, string CompradorNameSurname, ApplicationUser Comprador, string DireccionEnvio, int telefono, string tituloLibro, int LibroId, int Cantidad, decimal Precio, DateTime FechaCompra)
+        public Comprar(string CompradorUserName, string CompradorNameSurname, ApplicationUser Comprador, string DireccionEnvio, int telefono, string tituloLibro, int LibroId, decimal Precio, int Cantidad, DateTime FechaCompra, IList<ComprarItem> comprarItems)
         {
         
+            PrecioTotal= comprarItems.Sum(item => item.Libro.PrecioCompra * item.Cantidad);
             LibroId= LibroId;
             LibroId= LibroId;
-            Cantidad= Cantidad;
             Precio= Precio;
             FechaCompra= FechaCompra;
             DireccionEnvio= DireccionEnvio;
@@ -45,6 +45,7 @@ namespace AppForSEII.API.Models
 
 
         public ApplicationUser ApplicationUser { get; set; }
+        public IList<ComprarItem> ComprarItems { get; set; }
     }
 
     public enum MetodoDePago

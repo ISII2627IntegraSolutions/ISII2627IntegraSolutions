@@ -31,11 +31,12 @@ namespace AppForSEII.API.Models
         [Range(0.5, float.MaxValue, ErrorMessage = "Minimum price is 0.5 ")]
         [System.ComponentModel.DataAnnotations.Display(Name = "PrecioCompra")]
         [Precision(10, 2)]
-        public decimal PrecioCompra { get; set; }
+        public double PrecioCompra { get; set; }
 
          [System.ComponentModel.DataAnnotations.Display(Name = "Stock")]
         [Range(0, int.MaxValue, ErrorMessage = "Minimum quantity for Purchase is 1")]
         public int Stock { get; set; }
+        public IList<ComprarItem> ComprarItems { get; set; }
 
     
     }
