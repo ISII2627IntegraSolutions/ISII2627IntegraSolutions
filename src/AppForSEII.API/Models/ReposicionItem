@@ -1,0 +1,36 @@
+
+    public class ReposicionItem
+{
+    public ReposicionItem()
+    {
+    }
+    public ReposicionItem(Libro libro, Reposicion reposicion)
+    {
+        Libro=libro;
+        LibroId=libro.id;
+        Reposicion = reposicion;
+        ReposicionId = reposicion.id;
+    }
+    public ReposicionItem(Libro libro,Reposicion reposicion, string? descripcion) : this(libro,reposicion)
+    {
+        Descripcion = descripcion;
+        PrecioDeReposicion = libro.PrecioDeReposicion;
+    }
+
+    public ReposicionItem(int libroId , Reposicion reposicion, double precioDeReposicion)
+    {
+        libroId = libroId;
+        Reposicion = reposicion;
+        PrecioDeReposicion = precioDeReposicion;
+    }
+
+    public ReposicionItem(int libroId, Reposicion reposicion,double precioDeReposicion, string? descripcion) : this(libroId,reposicion,precioDeReposicion) => Descripcion = descripcion;
+
+    public Libro libro { get; set; }
+    public int LibroId { get; set; }
+    public Reposicion reposicion { get; set; }
+    public int ReposicionId { get; set; }
+    public string? Descripcion { get; set; }
+    public double PrecioDeReposicion { get; set; }
+    
+}
