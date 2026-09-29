@@ -21,6 +21,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Editorial> Editoriales {get; set; }
     public DbSet<Libro> Libros {get; set; }
     public DbSet<Comprar> Compras {get; set; }
+    public DbSet<ComprarItem> ComprarItems {get; set; }
 
 
 
