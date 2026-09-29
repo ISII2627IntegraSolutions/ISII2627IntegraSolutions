@@ -2,25 +2,12 @@ namespace AppForSEII.API.Models
 {
     public class Libro
     {
-        public Libro()
-        {
-            
-        }
-        public Libro(int Id, string Titulo, String Autor, DateTime FechaLanzamiento, decimal PrecioCompra, int Stock)
-        {
-            Id= Id;
-            Titulo= Titulo;
-            Autor= Autor;
-            FechaLanzamiento= FechaLanzamiento;
-            PrecioCompra= PrecioCompra;
-            Stock= Stock;
-        }
+    
+        [Key]
         public int Id {get; set;} 
         
-        [StringLength(50, ErrorMessage = "Title name cannot be longer than 50 characters.")]
-        public string Title { get; set; }
-
-        public Genero Genero { get; set; }
+        [Required, StringLength(50, ErrorMessage = "El titulo no puede tener más de 50 caracteres.")]
+        public string Titulo { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -28,15 +15,19 @@ namespace AppForSEII.API.Models
         public DateTime FechaLanzamiento { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(0.5, float.MaxValue, ErrorMessage = "Minimum price is 0.5 ")]
+        [Range(0.5, float.MaxValue, ErrorMessage = "Precio de venta debe ser mayor a 0.5")]
         [System.ComponentModel.DataAnnotations.Display(Name = "PrecioCompra")]
         [Precision(10, 2)]
         public double PrecioCompra { get; set; }
 
          [System.ComponentModel.DataAnnotations.Display(Name = "Stock")]
-        [Range(0, int.MaxValue, ErrorMessage = "Minimum quantity for Purchase is 1")]
+        [Range(0, int.MaxValue, ErrorMessage = "La cantidad mínima para la compra es 1")]
         public int Stock { get; set; }
         public IList<ComprarItem> ComprarItems { get; set; }
+        [Required]
+        public Genero Genero { get; set; }
+        [Required]
+        public Editorial Editorial { get; set; }
 
     
     }

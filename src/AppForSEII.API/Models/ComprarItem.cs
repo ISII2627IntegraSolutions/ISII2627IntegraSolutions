@@ -6,7 +6,7 @@ namespace AppForSEII.API.Models
         {
             
         }
-        public ComprarItem(Libro libro, int cantidad, Comprar compra)
+        public ComprarItem(Libro libro, int cantidad, Compra compra)
         {
             Libro = libro;
             Cantidad = cantidad;
@@ -14,7 +14,8 @@ namespace AppForSEII.API.Models
         }
         public Libro Libro { get; set; }
         public int Cantidad { get; set; }
-        public Comprar Compra { get; set; }
-        
+        public Compra Compra { get; set; }
+        public int CompraId { get; set; }
+        public int LibroId { get; set; }
     }
 }
