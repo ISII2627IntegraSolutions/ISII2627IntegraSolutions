@@ -1,10 +1,6 @@
-using AppForSEII.API.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using AppForSEII.API.DTOs.ApplicationUserDTO;
-using AppForMovies.Models;
 
-namespace AppForSEII.API.Data;
+namespace AppForSEII.API.Data
+{
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
@@ -20,10 +16,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Editorial> Editoriales {get; set; }
     public DbSet<Libro> Libros {get; set; }
-    public DbSet<Comprar> Compras {get; set; }
+    public DbSet<Compra> Compras {get; set; }
     public DbSet<ComprarItem> ComprarItems {get; set; }
+    public DbSet<Genero> Generos {get; set; }
 
 
 
 
+}
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace AppForMovies.Models
+namespace AppForSEII.API.Models
 {
     public class Editorial
     {
