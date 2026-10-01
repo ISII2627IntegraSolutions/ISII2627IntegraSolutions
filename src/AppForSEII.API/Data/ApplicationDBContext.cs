@@ -20,7 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ComprarItem> ComprarItems {get; set; }
     public DbSet<Genero> Generos {get; set; }
     public DbSet<ReposicionItem> reposicionItems {get; set; }
-
+    public DbSet<Reposicion> reposicion{get;set;}
 
 
 }
