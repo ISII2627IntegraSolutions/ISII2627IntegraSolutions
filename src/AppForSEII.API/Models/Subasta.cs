@@ -19,5 +19,7 @@ public class Subasta{
         
   public MetodoDePago MetodoDePago { get; set; }
 
+  public IList<SubastaItem> SubastaItems { get; set; }
+
 }
 }
