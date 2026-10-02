@@ -7,7 +7,7 @@ namespace AppForSEII.API.Models
             
         }
 
-        public Libro(string titulo, string autor, DateTime fechaLanzamiento, double precioCompra, int stock, int editorialId, int generoId)
+        public Libro(string titulo, string autor, DateTime fechaLanzamiento, double precioCompra, int stock)
         {
             Titulo = titulo;
             Autor = autor;
