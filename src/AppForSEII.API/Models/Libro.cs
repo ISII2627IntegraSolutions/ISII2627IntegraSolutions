@@ -45,6 +45,9 @@ namespace AppForSEII.API.Models
         public Genero Genero { get; set; }
 
         public IList<ComprarItem> ComprarItems { get; set; }
+
+        public IList<SubastaItem> SubastaItems { get; set; }
+    
     
     }
 
