@@ -1,0 +1,19 @@
+@startuml
+class Libro {
+    + Libro()
+    + Libro(titulo:string, autor:string, fechaLanzamiento:DateTime, precioCompra:double, stock:int, editorialId:int, generoId:int)
+    + Id : int <<get>> <<set>>
+    + Titulo : string <<get>> <<set>>
+    + Autor : string <<get>> <<set>>
+    + PrecioCompra : double <<get>> <<set>>
+    + Stock : int <<get>> <<set>>
+    + TipoLibro : string <<get>> <<set>>
+    + FechaLanzamiento : DateTime <<get>> <<set>>
+    + ComprarItems : IList<ComprarItem> <<get>> <<set>>
+    + SubastaItems : IList<SubastaItem> <<get>> <<set>>
+}
+class "IList`1"<T> {
+}
+Libro --> "Editorial" Editorial
+Libro --> "Genero" Genero
+@enduml

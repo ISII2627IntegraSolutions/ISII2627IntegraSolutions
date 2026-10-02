@@ -36,9 +36,9 @@ namespace AppForSEII.API.Models
 
     public enum MetodoDePago
     {
-        CreditCard,
+        Visa,
         PayPal,
-        Cash
+        GooglePay,
     }
 
     

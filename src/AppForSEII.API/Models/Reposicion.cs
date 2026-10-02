@@ -33,10 +33,5 @@ namespace AppForSEII.API.Models
 
 
     }
-    public enum metododePagos
-    {
-        Visa,
-        PayPal,
-        GooglePay
-    }
+    
 }
