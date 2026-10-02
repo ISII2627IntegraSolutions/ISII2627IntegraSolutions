@@ -1,4 +1,5 @@
 
+
 namespace AppForSEII.API.Models
 {
     public class Reposicion
@@ -7,17 +8,18 @@ namespace AppForSEII.API.Models
         {
             
         }
-        public Reposicion( int reposicionId, DateTime fechaReposicion, double precioTotal, String comentario, MetodoDePago metodoDePago, IList<ReposicionItem> reposicionItem)
+        public Reposicion( DateTime fechaReposicion, double precioTotal, string? comentario, MetodoDePago metodoDePago, IList<ReposicionItem> reposicionItem)
         {
-           ReposicionId=reposicionId;
+           PrecioTotal = reposicionItem.Sum(ri => ri.PrecioDeReposicion * ri.CantidadReposicion);
            FechaReposicion=fechaReposicion;
            MetodoDePago=metodoDePago;
            Comentario=comentario;
            reposicionItems=reposicionItem;
           
         }
-        public int ReposicionId{get;set;}
-        public string Comentario{get;set;}
+        public int Id{get;set;}
+        [StringLength(100, MinimumLength = 20, ErrorMessage = "El comentario debe tener entre 20 y 100 caracteres.")]
+        public string? Comentario{get;set;}
         public double PrecioTotal{get;set;}
         [System.ComponentModel.DataAnnotations.Display(Name = "Fecha Reposicion")]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Date)]

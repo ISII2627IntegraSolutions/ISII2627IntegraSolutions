@@ -4,26 +4,21 @@
     public ReposicionItem()
     {
     }
-    public ReposicionItem(Libro libro)
-    {
-       
-    }
-    public ReposicionItem(Libro libro, string? descripcion) : this(libro)
-    {
-        Descripcion = descripcion;
-    }
 
-    public ReposicionItem(int libroId ,  double precioDeReposicion)
+    public ReposicionItem(int cantidadReposicion, Libro libro, Reposicion reposicion,double precioDeReposicion)
     {
-        libroId = libroId;
+        CantidadReposicion=cantidadReposicion;
+        Libro=libro;
+        Reposicion=reposicion;
         PrecioDeReposicion = precioDeReposicion;
     }
 
 
-    public Libro libro { get; set; }
-    public int LibroId { get; set; }
-    public int ReposicionId { get; set; }
-    public string? Descripcion { get; set; }
-    public double PrecioDeReposicion { get; set; }
+    public int LibroId{get;set;}
+    public Libro Libro{get;set;}
+    public int CantidadReposicion{get;set;}
+    public Reposicion Reposicion{get;set;}
+    public int ReposicionId{get;set;}
+     public double PrecioDeReposicion { get; set; }
 }
 }
