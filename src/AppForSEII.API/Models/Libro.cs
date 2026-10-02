@@ -47,6 +47,7 @@ namespace AppForSEII.API.Models
         public IList<ComprarItem> ComprarItems { get; set; }
 
          public IList<SubastaItem> SubastaItems { get; set; }
+         public string TipoLibro { get; set; }
 
     
     }
