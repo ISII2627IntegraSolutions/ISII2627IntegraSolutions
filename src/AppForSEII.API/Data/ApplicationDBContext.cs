@@ -19,9 +19,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Compra> Compras {get; set; }
     public DbSet<ComprarItem> ComprarItems {get; set; }
     public DbSet<Genero> Generos {get; set; }
-    /*public DbSet<Reposicion> Reposiciones {get; set; }
+    public DbSet<Reposicion> Reposiciones {get; set; }
     public DbSet<ReposicionItem> ReposicionItems {get; set; }
-    */
+    
     public DbSet<Subasta> Subastas {get; set; }
     public DbSet<SubastaItem> SubastaItems {get; set; }
 

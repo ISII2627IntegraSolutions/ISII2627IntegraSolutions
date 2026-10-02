@@ -1,0 +1,15 @@
+@startuml
+class Reposicion {
+    + Reposicion()
+    + Reposicion(fechaReposicion:DateTime, precioTotal:double, comentario:string?, metodoDePago:MetodoDePago, reposicionItem:IList<ReposicionItem>)
+    + Id : int <<get>> <<set>>
+    + Comentario : string? <<get>> <<set>>
+    + PrecioTotal : double <<get>> <<set>>
+    + FechaReposicion : DateTime <<get>> <<set>>
+    + ReposicionItems : IList<ReposicionItem> <<get>> <<set>>
+}
+class "IList`1"<T> {
+}
+Reposicion --> "MetodoDePago" MetodoDePago
+Reposicion --> "ApplicationUser" ApplicationUser
+@enduml

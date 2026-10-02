@@ -1,0 +1,12 @@
+@startuml
+class Genero {
+    + Genero()
+    + Genero(id:int, nombre:string, libros:IList<Libro>)
+    + Id : int <<get>> <<set>>
+    + Nombre : string <<get>> <<set>>
+    + Libros : IList<Libro> <<get>> <<set>>
+}
+class "IList`1"<T> {
+}
+
+@enduml
