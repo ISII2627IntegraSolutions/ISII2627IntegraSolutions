@@ -8,7 +8,7 @@ namespace AppForSEII.API.Models
         {
             
         }
-        public Reposicion( DateTime fechaReposicion, double precioTotal, string? comentario, MetodoDePago metodoDePago, IList<ReposicionItem> reposicionItem)
+        public Reposicion( DateTime fechaReposicion, string? comentario, MetodosdePago metodoDePago, IList<ReposicionItem> reposicionItem)
         {
            PrecioTotal = reposicionItem.Sum(ri => ri.PrecioDeReposicion * ri.CantidadReposicion);
            FechaReposicion=fechaReposicion;
@@ -27,7 +27,7 @@ namespace AppForSEII.API.Models
         [StringLength(100, MinimumLength = 20, ErrorMessage = "El comentario debe tener entre 20 y 100 caracteres.")]
         public string? Comentario{get;set;}
         public double PrecioTotal{get;set;}
-        public MetodoDePago MetodoDePago{get;set;}
+        public MetodosdePago MetodoDePago{get;set;}
         public ApplicationUser ApplicationUser { get; set; }
         public IList<ReposicionItem> reposicionItems { get; set; }
 

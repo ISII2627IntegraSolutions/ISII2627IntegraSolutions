@@ -1,0 +1,11 @@
+@startuml
+class MetodosdePago {
+    + Id : int <<get>> <<set>>
+    + MetodosdePago()
+    + <<override>> Equals(obj:object?) : bool
+    + <<override>> GetHashCode() : int
+    + Compras : IList<Compra> <<get>> <<set>>
+    + Reposiciones : IList<Reposicion> <<get>> <<set>>
+    + Subastas : IList<Subasta> <<get>> <<set>>
+}
+@enduml

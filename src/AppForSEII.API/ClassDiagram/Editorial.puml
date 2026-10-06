@@ -6,7 +6,5 @@ class Editorial {
     + Nombre : string <<get>> <<set>>
     + Libros : IList<Libro> <<get>> <<set>>
 }
-class "IList`1"<T> {
-}
 
 @enduml

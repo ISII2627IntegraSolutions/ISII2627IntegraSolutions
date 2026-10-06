@@ -4,9 +4,13 @@
 !include .\\ComprarItem.puml
 !include .\\Editorial.puml
 !include .\\Genero.puml
+!include .\\GooglePay.puml
 !include .\\Libro.puml
+!include .\\MetodosdePago.puml
+!include .\\PayPal.puml
 !include .\\Reposicion.puml
 !include .\\ReposicionItem.puml
 !include .\\Subasta.puml
 !include .\\SubastaItem.puml
+!include .\\Visa.puml
 @enduml
