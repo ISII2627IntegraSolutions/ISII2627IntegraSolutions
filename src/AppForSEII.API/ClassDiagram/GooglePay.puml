@@ -1,0 +1,8 @@
+@startuml
+class GooglePay {
+    + Email : string <<get>> <<set>>
+    + GooglePay()
+    + <<override>> Equals(obj:object?) : bool
+}
+MetodosdePago <|-- GooglePay
+@enduml

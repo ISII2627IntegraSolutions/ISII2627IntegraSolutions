@@ -1,14 +1,14 @@
 @startuml
 class Subasta {
     + Subasta()
-    + Subasta(fechaSubasta:DateTime, applicationUser:ApplicationUser, metodoDePago:MetodoDePago, subastaItems:IList<SubastaItem>)
+    + Subasta(fechaSubasta:DateTime, applicationUser:ApplicationUser, metodoDePago:MetodosdePago, subastaItems:IList<SubastaItem>)
     + Id : int <<get>> <<set>>
     + PrecioSubasta : double <<get>> <<set>>
     + FechaSubasta : DateTime <<get>> <<set>>
-    + SubastaItems : IList<SubastaItem> <<get>> <<set>>
+    + subastaItems : IList<SubastaItem> <<get>> <<set>>
 }
 class "IList`1"<T> {
 }
 Subasta --> "ApplicationUser" ApplicationUser
-Subasta --> "MetodoDePago" MetodoDePago
+Subasta --> "MetodoDePago" MetodosdePago
 @enduml

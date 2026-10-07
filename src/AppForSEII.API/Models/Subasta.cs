@@ -6,7 +6,7 @@ namespace AppForSEII.API.Models
         {
         }
 
-        public Subasta(DateTime fechaSubasta, ApplicationUser applicationUser, MetodoDePago metodoDePago, IList<SubastaItem> subastaItems)
+        public Subasta(DateTime fechaSubasta, ApplicationUser applicationUser, MetodosdePago metodoDePago, IList<SubastaItem> subastaItems)
         {
             PrecioSubasta = subastaItems.Sum(si => si.PrecioPuja);
             FechaSubasta = fechaSubasta;
@@ -27,7 +27,7 @@ namespace AppForSEII.API.Models
 
         public ApplicationUser ApplicationUser { get; set; }
 
-        public MetodoDePago MetodoDePago { get; set; }
+        public MetodosdePago MetodoDePago { get; set; }
 
         public IList<SubastaItem> SubastaItems { get; set; }
     }

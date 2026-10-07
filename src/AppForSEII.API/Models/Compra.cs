@@ -6,7 +6,7 @@ namespace AppForSEII.API.Models
         {
             
         }
-        public Compra(DateTime fechaCompra, string? codigoDescuento, MetodoDePago metodoDePago, IList<ComprarItem> comprarItems)
+        public Compra(DateTime fechaCompra, string? codigoDescuento, MetodosdePago metodoDePago, IList<ComprarItem> comprarItems)
         {
             PrecioTotal = comprarItems.Sum(ri=> ri.Libro.PrecioCompra * ri.Cantidad);
             FechaCompra = fechaCompra;
@@ -31,15 +31,9 @@ namespace AppForSEII.API.Models
 
         
 
-         public MetodoDePago MetodoDePago { get; set; }
+         public MetodosdePago MetodoDePago { get; set; }
     }
 
-    public enum MetodoDePago
-    {
-        Visa,
-        PayPal,
-        GooglePay,
-    }
 
     
 }

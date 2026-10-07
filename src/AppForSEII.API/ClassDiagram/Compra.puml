@@ -1,20 +1,16 @@
 @startuml
 class Compra {
     + Compra()
-    + Compra(fechaCompra:DateTime, codigoDescuento:string?, metodoDePago:MetodoDePago, comprarItems:IList<ComprarItem>)
+    + Compra(fechaCompra:DateTime, codigoDescuento:string?, metodoDePago:MetodosdePago, comprarItems:IList<ComprarItem>)
     + Id : int <<get>> <<set>>
     + PrecioTotal : double <<get>> <<set>>
     + CodigoDescuento : string? <<get>> <<set>>
     + FechaCompra : DateTime <<get>> <<set>>
     + ComprarItems : IList<ComprarItem> <<get>> <<set>>
-}
-enum MetodoDePago {
-    Visa,
-    PayPal,
-    GooglePay,
+
 }
 class "IList`1"<T> {
 }
 Compra --> "ApplicationUser" ApplicationUser
-Compra --> "MetodoDePago" MetodoDePago
+Compra --> "MetodoDePago" MetodosdePago
 @enduml

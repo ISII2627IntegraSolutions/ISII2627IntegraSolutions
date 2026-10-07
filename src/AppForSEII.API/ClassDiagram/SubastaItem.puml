@@ -6,6 +6,8 @@ class SubastaItem {
     + Descripcion : string? <<get>> <<set>>
     + LibroId : int <<get>> <<set>>
     + SubastaId : int <<get>> <<set>>
+    + Libro : Libro <<get>> <<set>>
+    + Subasta : Subasta <<get>> <<set>>
 }
 SubastaItem --> "Libro" Libro
 SubastaItem --> "Subasta" Subasta
