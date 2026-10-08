@@ -554,3 +554,6 @@ Using the **Coverage Gutters** extension:
 ```text
 Ctrl+Shift+P → Coverage Gutters: Display
 ```
+## Enlace al dashboard de BlueJay
+``` https://grafana.next.governify.io/d/agv-b85808aa219a17d03146-v1/uclm-isii-2026-2027-isii2627integrasolutions-v1?orgId=1&from=2026-09-20T22:00:00.000Z&to=2026-12-27T23:00:00.000Z&timezone=browser&var-showEvolutivePoints=true&refresh=30s
+```
