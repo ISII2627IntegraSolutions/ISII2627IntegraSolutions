@@ -95,6 +95,260 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.Compra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CodigoDescuento")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("FechaCompra")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MetodoDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioTotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("MetodoDePagoId");
+
+                    b.ToTable("Compras");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.ComprarItem", b =>
+                {
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.HasKey("LibroId", "CompraId");
+
+                    b.HasIndex("CompraId");
+
+                    b.ToTable("ComprarItems");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Editorial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Editoriales");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Genero", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Generos");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Libro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Autor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EditorialId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaLanzamiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GeneroId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioCompra")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("float(10)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TipoLibro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EditorialId");
+
+                    b.HasIndex("GeneroId");
+
+                    b.ToTable("Libros");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.MetodosdePago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MetodosdePago");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Reposicion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comentario")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FechaReposicion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MetodoDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioTotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("MetodoDePagoId");
+
+                    b.ToTable("Reposiciones");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.ReposicionItem", b =>
+                {
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReposicionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CantidadReposicion")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioDeReposicion")
+                        .HasColumnType("float");
+
+                    b.HasKey("LibroId", "ReposicionId");
+
+                    b.HasIndex("ReposicionId");
+
+                    b.ToTable("ReposicionItems");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Subasta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("FechaSubasta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MetodoDePagoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PrecioSubasta")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("MetodoDePagoId");
+
+                    b.ToTable("Subastas");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.SubastaItem", b =>
+                {
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubastaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<double>("PrecioPuja")
+                        .HasColumnType("float");
+
+                    b.HasKey("LibroId", "SubastaId");
+
+                    b.HasIndex("SubastaId");
+
+                    b.ToTable("SubastaItems");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -228,6 +482,139 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.Compra", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.MetodosdePago", "MetodoDePago")
+                        .WithMany("Compras")
+                        .HasForeignKey("MetodoDePagoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("MetodoDePago");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.ComprarItem", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Compra", "Compra")
+                        .WithMany("ComprarItems")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Libro", "Libro")
+                        .WithMany("ComprarItems")
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("Libro");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Libro", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Editorial", "Editorial")
+                        .WithMany("Libros")
+                        .HasForeignKey("EditorialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Genero", "Genero")
+                        .WithMany("Libros")
+                        .HasForeignKey("GeneroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Editorial");
+
+                    b.Navigation("Genero");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Reposicion", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.MetodosdePago", "MetodoDePago")
+                        .WithMany("Reposiciones")
+                        .HasForeignKey("MetodoDePagoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("MetodoDePago");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.ReposicionItem", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Reposicion", "Reposicion")
+                        .WithMany("reposicionItems")
+                        .HasForeignKey("ReposicionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Libro");
+
+                    b.Navigation("Reposicion");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Subasta", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.MetodosdePago", "MetodoDePago")
+                        .WithMany("Subastas")
+                        .HasForeignKey("MetodoDePagoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("MetodoDePago");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.SubastaItem", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Libro", "Libro")
+                        .WithMany("SubastaItems")
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Subasta", "Subasta")
+                        .WithMany("SubastaItems")
+                        .HasForeignKey("SubastaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Libro");
+
+                    b.Navigation("Subasta");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -277,6 +664,47 @@ namespace AppForSEII.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Compra", b =>
+                {
+                    b.Navigation("ComprarItems");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Editorial", b =>
+                {
+                    b.Navigation("Libros");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Genero", b =>
+                {
+                    b.Navigation("Libros");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Libro", b =>
+                {
+                    b.Navigation("ComprarItems");
+
+                    b.Navigation("SubastaItems");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.MetodosdePago", b =>
+                {
+                    b.Navigation("Compras");
+
+                    b.Navigation("Reposiciones");
+
+                    b.Navigation("Subastas");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Reposicion", b =>
+                {
+                    b.Navigation("reposicionItems");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Subasta", b =>
+                {
+                    b.Navigation("SubastaItems");
                 });
 #pragma warning restore 612, 618
         }
