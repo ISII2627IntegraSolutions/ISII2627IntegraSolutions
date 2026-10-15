@@ -1,4 +1,3 @@
-
 namespace AppForSEII.API.Data
 {
 
@@ -25,8 +24,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Subasta> Subastas {get; set; }
     public DbSet<SubastaItem> SubastaItems {get; set; }
 
-
-
+    public DbSet<MetodosdePago> MetodosdePago {get; set; }
+    public DbSet<Visa> Visas {get; set; }
+    public DbSet<PayPal> PayPals {get; set; }
+    public DbSet<GooglePay> GooglePays {get; set; }
 
 }
 }
