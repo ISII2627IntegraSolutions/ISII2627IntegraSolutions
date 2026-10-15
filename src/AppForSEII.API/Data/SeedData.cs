@@ -1,41 +1,68 @@
-namespace AppForSEII.API.Data {
-    public class SeedData {
-        public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger) {
+namespace AppForSEII.API.Data
+{
+    public class SeedData
+    {
+        public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger)
+        {
             List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
 
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            try {
+            try
+            {
                 SeedRoles(roleManager, rolesNames);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.LogError(ex, "An error occurred seeding the roles in the Database.");
             }
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            try {
+            try
+            {
                 SeedUsers(userManager, rolesNames);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
 
-            try {
+            try
+            {
                 SeedGenerosEditorialesYLibros(dbContext);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.LogError(ex, "An error occurred seeding the Generos, Editoriales and Libros in the Database.");
             }
+
+
+            try
+            {
+                SeedCompras(dbContext, logger);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(
+                ex,
+                "An error occurred seeding the Compras and ComprarItems in the Database.");
+            }
+
+
 
             var admin = dbContext.Users.OfType<ApplicationUser>().FirstOrDefault(u => u.UserName == "elena@uclm.es");
             var clientes = dbContext.Users.OfType<ApplicationUser>().Where(u => u.UserName != "elena@uclm.es").ToList();
 
+
         }
 
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles) {
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
+        {
 
-            foreach (string roleName in roles) {
+            foreach (string roleName in roles)
+            {
                 //it checks such role does not exist in the database
-                if (!roleManager.RoleExistsAsync(roleName).Result) {
+                if (!roleManager.RoleExistsAsync(roleName).Result)
+                {
                     IdentityRole role = new IdentityRole();
                     role.Name = roleName;
                     role.NormalizedName = roleName;
@@ -45,23 +72,27 @@ namespace AppForSEII.API.Data {
 
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles)
+        {
             //first, it checks the user does not already exist in the DB
-            if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
+            if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
+            {
                 ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "Password1234%");
                 result.Wait();
 
-                if (result.IsCompletedSuccessfully) {
+                if (result.IsCompletedSuccessfully)
+                {
                     //administrator role
                     userManager.AddToRoleAsync(user, roles[0]).Wait();
                 }
             }
 
 
-            if (userManager.FindByNameAsync("peter@uclm.es").Result == null) {
+            if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
+            {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
                 ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
                 user.EmailConfirmed = true;
@@ -70,7 +101,8 @@ namespace AppForSEII.API.Data {
 
                 result.Wait();
 
-                if (result.IsCompletedSuccessfully) {
+                if (result.IsCompletedSuccessfully)
+                {
                     //customer role
                     userManager.AddToRoleAsync(user, roles[2]).Wait();
 
@@ -88,8 +120,10 @@ namespace AppForSEII.API.Data {
                 { "11", "Andrés", "Navarro Ortiz", "andres@uclm.es", "612345678" }
             };
 
-            for (int i = 0; i < clientes.GetLength(0); i++) {
-                if (userManager.FindByNameAsync(clientes[i, 3]).Result == null) {
+            for (int i = 0; i < clientes.GetLength(0); i++)
+            {
+                if (userManager.FindByNameAsync(clientes[i, 3]).Result == null)
+                {
                     ApplicationUser user = new ApplicationUser(clientes[i, 0], clientes[i, 1], clientes[i, 2], clientes[i, 3]);
                     user.PhoneNumber = clientes[i, 4];
                     user.EmailConfirmed = true;
@@ -97,7 +131,8 @@ namespace AppForSEII.API.Data {
                     var result = userManager.CreateAsync(user, "Cliente1234%");
                     result.Wait();
 
-                    if (result.IsCompletedSuccessfully) {
+                    if (result.IsCompletedSuccessfully)
+                    {
                         //customer role
                         userManager.AddToRoleAsync(user, roles[2]).Wait();
                     }
@@ -106,7 +141,8 @@ namespace AppForSEII.API.Data {
 
         }
 
-        public static void SeedGenerosEditorialesYLibros(ApplicationDbContext dbcontext) {
+        public static void SeedGenerosEditorialesYLibros(ApplicationDbContext dbcontext)
+        {
             if (dbcontext.Libros.Any())
                 return;
 
@@ -139,6 +175,160 @@ namespace AppForSEII.API.Data {
 
             dbcontext.SaveChanges();
         }
+
+
+        
+public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
+{
+    // Clientes que ya existen en el SeedData
+    string[] emails =
+    {
+        "peter@uclm.es",
+        "lucia@uclm.es",
+        "carlos@uclm.es",
+        "maria@uclm.es",
+        "javier@uclm.es",
+        "laura@uclm.es",
+        "pablo@uclm.es",
+        "sara@uclm.es",
+        "andres@uclm.es",
+        "peter@uclm.es"
+    };
+
+    // Libros que ya existen en la base de datos
+    string[] titulos =
+    {
+        "Cien años de soledad",
+        "El nombre del viento",
+        "Dune",
+        "It",
+        "Orgullo y prejuicio",
+        "Sapiens",
+        "Veinte poemas de amor",
+        "Steve Jobs",
+        "Diez negritos",
+        "La isla del tesoro"
+    };
+
+    // Recuperar libros y usuarios
+    var usuarios = emails.Select(email =>
+        dbContext.Users.OfType<ApplicationUser>()
+            .FirstOrDefault(u => u.UserName == email)
+    ).ToArray();
+
+    var libros = titulos.Select(titulo =>
+        dbContext.Libros.FirstOrDefault(l => l.Titulo == titulo)
+    ).ToArray();
+
+    if (usuarios.Any(u => u == null) ||
+        libros.Any(l => l == null))
+    {
+        logger.LogWarning(
+            "No se pueden insertar compras: faltan usuarios o libros.");
+        return;
+    }
+
+    // Cada fila representa una compra:
+    // Índice libro 1, cantidad 1, índice libro 2, cantidad 2,
+    // índice libro 3, cantidad 3.
+    // -1 significa que no se añade otro libro.
+
+    int[,] datosCompras =
+    {
+        { 0, 2, 1, 1, -1, 0 },
+        { 2, 1, 4, 2, -1, 0 },
+        { 9, 2, 0, 1, 2, 1 },
+        { 3, 1, 6, 2, -1, 0 },
+        { 7, 1, 8, 1, 1, 1 },
+        { 5, 1, 4, 1, -1, 0 },
+        { 6, 3, 9, 1, -1, 0 },
+        { 1, 2, 2, 1, -1, 0 },
+        { 8, 1, 0, 2, 7, 1 },
+        { 4, 2, 3, 1, 5, 1 }
+    };
+
+    for (int i = 0; i < 10; i++)
+    {
+        string codigo = $"DEMO{i + 1:00}";
+
+        // Evitar compras duplicadas
+        if (dbContext.Compras.Any(c =>
+            c.CodigoDescuento == codigo))
+        {
+            continue;
+        }
+
+        // Crear método de pago según la compra
+        MetodosdePago metodoPago;
+
+        switch (i % 3)
+        {
+            case 0:
+                metodoPago = new Visa
+                {
+                    NumeroTarjeta = "4111111111111111",
+                    FechaCaducidad = new DateTime(2030, 12, 31)
+                };
+                break;
+
+            case 1:
+                metodoPago = new PayPal
+                {
+                    NumeroTelefono = $"6123456{i + 10}"
+                };
+                break;
+
+            default:
+                metodoPago = new GooglePay
+                {
+                    Email = $"cliente{i + 1}@example.com"
+                };
+                break;
+        }
+
+        // Crear compra
+        var items = new List<ComprarItem>();
+
+        var compra = new Compra(
+            new DateTime(2026, 10, 1).AddDays(i),
+            codigo,
+            metodoPago,
+            items
+        );
+
+        compra.ApplicationUser = usuarios[i]!;
+
+        // Añadir libros a la compra
+        for (int j = 0; j < 6; j += 2)
+        {
+            int indiceLibro = datosCompras[i, j];
+            int cantidad = datosCompras[i, j + 1];
+
+            if (indiceLibro >= 0 && cantidad > 0)
+            {
+                items.Add(new ComprarItem(
+                    libros[indiceLibro]!,
+                    cantidad,
+                    compra
+                ));
+            }
+        }
+
+        // Calcular el precio total
+        compra.PrecioTotal = items.Sum(
+            item => item.Libro.PrecioCompra * item.Cantidad
+        );
+
+        // Guardar la compra y sus artículos
+        dbContext.Compras.Add(compra);
+    }
+
+    dbContext.SaveChanges();
+
+    logger.LogInformation(
+        "Seed de las 10 compras completado correctamente.");
+}
+
 
     }
 }
