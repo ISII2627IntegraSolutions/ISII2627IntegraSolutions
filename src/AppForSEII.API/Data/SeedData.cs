@@ -52,6 +52,14 @@ namespace AppForSEII.API.Data
             var admin = dbContext.Users.OfType<ApplicationUser>().FirstOrDefault(u => u.UserName == "elena@uclm.es");
             var clientes = dbContext.Users.OfType<ApplicationUser>().Where(u => u.UserName != "elena@uclm.es").ToList();
 
+            try
+            {
+                SeedSubastas(dbContext, clientes);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the Subastas and SubastaItems in the Database.");
+            }
 
         }
 
@@ -329,6 +337,39 @@ public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
         "Seed de las 10 compras completado correctamente.");
 }
 
+        public static void SeedSubastas(ApplicationDbContext dbcontext, List<ApplicationUser> clientes)
+        {
+            if (dbcontext.Subastas.Any())
+                return;
+
+            // Solo se pueden subastar libros con stock (se quedan fuera It, Sapiens y Diez negritos)
+            List<Libro> libros = dbcontext.Libros.Where(l => l.Stock > 0).ToList();
+            if (libros.Count == 0 || clientes.Count == 0)
+                return;
+
+            // Descripción opcional: o null o entre 20 y 100 caracteres
+            string?[] descripciones = ["Ejemplar en perfecto estado, sin subrayados", null, "Primera edición con la portada original", "Libro firmado por el autor en la primera página", null];
+
+            for (int i = 0; i < 5; i++)
+            {
+                MetodosdePago metodoDePago = new MetodosdePago();
+                Subasta subasta = new Subasta(DateTime.Today.AddDays(-i), clientes[i], metodoDePago, new List<SubastaItem>());
+
+                // Primer libro de la subasta
+                subasta.SubastaItems.Add(new SubastaItem(libros[i], subasta, 10 + i * 5, descripciones[i]));
+
+                // Las subastas pares llevan un segundo libro, distinto del primero (por la clave LibroId + SubastaId)
+                if (i % 2 == 0)
+                    subasta.SubastaItems.Add(new SubastaItem(libros[i + 1], subasta, 15 + i * 3, null));
+
+                // Se recalcula porque el constructor lo calculó con la lista aún vacía
+                subasta.PrecioSubasta = subasta.SubastaItems.Sum(si => si.PrecioPuja);
+
+                dbcontext.Subastas.Add(subasta);
+            }
+
+            dbcontext.SaveChanges();
+        }
 
     }
 }
