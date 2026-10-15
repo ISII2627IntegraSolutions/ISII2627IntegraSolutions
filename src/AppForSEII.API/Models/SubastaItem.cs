@@ -7,7 +7,7 @@ namespace AppForSEII.API.Models
         {
         }
 
-        public SubastaItem(Libro libro, Subasta subasta, double precioPuja, string? descripcion)
+        public SubastaItem(Libro libro, Subasta subasta, decimal precioPuja, string? descripcion)
         {
             Libro = libro;
             Subasta = subasta;
@@ -15,9 +15,11 @@ namespace AppForSEII.API.Models
             Descripcion = descripcion;
         }
 
-        [Range(1, double.MaxValue, ErrorMessage = "El precio de la puja debe ser como mínimo 1.")]
+        [Range(typeof(decimal), "1", "99999999.99",
+        ErrorMessage = "El precio de la puja debe ser como mínimo 1.")]
         [System.ComponentModel.DataAnnotations.Display(Name = "Precio Puja")]
-        public double PrecioPuja { get; set; }
+        [Precision(10, 2)]
+        public decimal PrecioPuja { get; set; }
 
         [StringLength(100, MinimumLength = 20, ErrorMessage = "La descripción debe tener entre 20 y 100 caracteres.")]
         public string? Descripcion { get; set; }

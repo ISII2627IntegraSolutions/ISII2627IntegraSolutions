@@ -83,7 +83,12 @@ namespace AppForSEII.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumeroTelefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumeroTarjeta = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaCaducidad = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,7 +210,7 @@ namespace AppForSEII.API.Migrations
                     Titulo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaLanzamiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PrecioCompra = table.Column<double>(type: "float(10)", precision: 10, scale: 2, nullable: false),
+                    PrecioCompra = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     EditorialId = table.Column<int>(type: "int", nullable: false),
                     GeneroId = table.Column<int>(type: "int", nullable: false),
@@ -235,7 +240,7 @@ namespace AppForSEII.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FechaCompra = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PrecioTotal = table.Column<double>(type: "float", nullable: false),
+                    PrecioTotal = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     CodigoDescuento = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MetodoDePagoId = table.Column<int>(type: "int", nullable: false)
@@ -265,7 +270,7 @@ namespace AppForSEII.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FechaReposicion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Comentario = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    PrecioTotal = table.Column<double>(type: "float", nullable: false),
+                    PrecioTotal = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     MetodoDePagoId = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -293,7 +298,7 @@ namespace AppForSEII.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FechaSubasta = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PrecioSubasta = table.Column<double>(type: "float", nullable: false),
+                    PrecioSubasta = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MetodoDePagoId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -346,7 +351,7 @@ namespace AppForSEII.API.Migrations
                     LibroId = table.Column<int>(type: "int", nullable: false),
                     ReposicionId = table.Column<int>(type: "int", nullable: false),
                     CantidadReposicion = table.Column<int>(type: "int", nullable: false),
-                    PrecioDeReposicion = table.Column<double>(type: "float", nullable: false)
+                    PrecioDeReposicion = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -371,7 +376,7 @@ namespace AppForSEII.API.Migrations
                 {
                     LibroId = table.Column<int>(type: "int", nullable: false),
                     SubastaId = table.Column<int>(type: "int", nullable: false),
-                    PrecioPuja = table.Column<double>(type: "float", nullable: false),
+                    PrecioPuja = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>

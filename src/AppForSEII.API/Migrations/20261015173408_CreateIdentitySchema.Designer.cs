@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261014155848_CreateIdentitySchema")]
+    [Migration("20261015173408_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -120,8 +120,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("MetodoDePagoId")
                         .HasColumnType("int");
 
-                    b.Property<double>("PrecioTotal")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PrecioTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -207,9 +208,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("GeneroId")
                         .HasColumnType("int");
 
-                    b.Property<double>("PrecioCompra")
+                    b.Property<decimal>("PrecioCompra")
                         .HasPrecision(10, 2)
-                        .HasColumnType("float(10)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
@@ -240,9 +241,18 @@ namespace AppForSEII.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.HasKey("Id");
 
                     b.ToTable("MetodosdePago");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("MetodosdePago");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Reposicion", b =>
@@ -267,8 +277,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("MetodoDePagoId")
                         .HasColumnType("int");
 
-                    b.Property<double>("PrecioTotal")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PrecioTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -290,8 +301,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("CantidadReposicion")
                         .HasColumnType("int");
 
-                    b.Property<double>("PrecioDeReposicion")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PrecioDeReposicion")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("LibroId", "ReposicionId");
 
@@ -318,8 +330,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("MetodoDePagoId")
                         .HasColumnType("int");
 
-                    b.Property<double>("PrecioSubasta")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PrecioSubasta")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -342,8 +355,9 @@ namespace AppForSEII.API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<double>("PrecioPuja")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PrecioPuja")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("LibroId", "SubastaId");
 
@@ -483,6 +497,42 @@ namespace AppForSEII.API.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.GooglePay", b =>
+                {
+                    b.HasBaseType("AppForSEII.API.Models.MetodosdePago");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("GooglePay");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.PayPal", b =>
+                {
+                    b.HasBaseType("AppForSEII.API.Models.MetodosdePago");
+
+                    b.Property<string>("NumeroTelefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("PayPal");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Visa", b =>
+                {
+                    b.HasBaseType("AppForSEII.API.Models.MetodosdePago");
+
+                    b.Property<DateTime>("FechaCaducidad")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NumeroTarjeta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Visa");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Compra", b =>
