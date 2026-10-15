@@ -23,7 +23,8 @@ namespace AppForSEII.API.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaSubasta { get; set; }
 
-        public double PrecioSubasta { get; set; }
+        [Precision(10, 2)]
+        public decimal PrecioSubasta { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
 

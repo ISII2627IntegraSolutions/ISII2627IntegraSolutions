@@ -169,16 +169,16 @@ namespace AppForSEII.API.Data
             dbcontext.Editoriales.AddRange(editoriales);
 
             dbcontext.Libros.AddRange(
-                new Libro { Titulo = "Cien años de soledad", Autor = "Gabriel García Márquez", FechaLanzamiento = new DateTime(1967, 5, 30), PrecioCompra = 19.95, Stock = 12, TipoLibro = "Tapa dura", Editorial = editoriales[2], Genero = generos[0] },
-                new Libro { Titulo = "El nombre del viento", Autor = "Patrick Rothfuss", FechaLanzamiento = new DateTime(2007, 3, 27), PrecioCompra = 24.90, Stock = 8, TipoLibro = "Tapa blanda", Editorial = editoriales[6], Genero = generos[1] },
-                new Libro { Titulo = "Dune", Autor = "Frank Herbert", FechaLanzamiento = new DateTime(1965, 8, 1), PrecioCompra = 21.50, Stock = 5, TipoLibro = "Bolsillo", Editorial = editoriales[7], Genero = generos[2] },
-                new Libro { Titulo = "It", Autor = "Stephen King", FechaLanzamiento = new DateTime(1986, 9, 15), PrecioCompra = 18.00, Stock = 0, TipoLibro = "Bolsillo", Editorial = editoriales[0], Genero = generos[3] },
-                new Libro { Titulo = "Orgullo y prejuicio", Autor = "Jane Austen", FechaLanzamiento = new DateTime(1813, 1, 28), PrecioCompra = 12.95, Stock = 7, TipoLibro = "Tapa blanda", Editorial = editoriales[8], Genero = generos[4] },
-                new Libro { Titulo = "Sapiens", Autor = "Yuval Noah Harari", FechaLanzamiento = new DateTime(2011, 1, 1), PrecioCompra = 22.90, Stock = 0, TipoLibro = "Tapa dura", Editorial = editoriales[4], Genero = generos[5] },
-                new Libro { Titulo = "Veinte poemas de amor", Autor = "Pablo Neruda", FechaLanzamiento = new DateTime(1924, 6, 1), PrecioCompra = 9.95, Stock = 15, TipoLibro = "Bolsillo", Editorial = editoriales[9], Genero = generos[6] },
-                new Libro { Titulo = "Steve Jobs", Autor = "Walter Isaacson", FechaLanzamiento = new DateTime(2011, 10, 24), PrecioCompra = 26.50, Stock = 3, TipoLibro = "Tapa dura", Editorial = editoriales[1], Genero = generos[7] },
-                new Libro { Titulo = "Diez negritos", Autor = "Agatha Christie", FechaLanzamiento = new DateTime(1939, 11, 6), PrecioCompra = 10.50, Stock = 0, TipoLibro = "Bolsillo", Editorial = editoriales[3], Genero = generos[8] },
-                new Libro { Titulo = "La isla del tesoro", Autor = "Robert Louis Stevenson", FechaLanzamiento = new DateTime(1883, 11, 14), PrecioCompra = 11.90, Stock = 9, TipoLibro = "Edición ilustrada", Editorial = editoriales[5], Genero = generos[9] }
+                new Libro { Titulo = "Cien años de soledad", Autor = "Gabriel García Márquez", FechaLanzamiento = new DateTime(1967, 5, 30), PrecioCompra = 19.95m, Stock = 12, TipoLibro = "Tapa dura", Editorial = editoriales[2], Genero = generos[0] },
+                new Libro { Titulo = "El nombre del viento", Autor = "Patrick Rothfuss", FechaLanzamiento = new DateTime(2007, 3, 27), PrecioCompra = 24.90m, Stock = 8, TipoLibro = "Tapa blanda", Editorial = editoriales[6], Genero = generos[1] },
+                new Libro { Titulo = "Dune", Autor = "Frank Herbert", FechaLanzamiento = new DateTime(1965, 8, 1), PrecioCompra = 21.50m, Stock = 5, TipoLibro = "Bolsillo", Editorial = editoriales[7], Genero = generos[2] },
+                new Libro { Titulo = "It", Autor = "Stephen King", FechaLanzamiento = new DateTime(1986, 9, 15), PrecioCompra = 18.00m, Stock = 0, TipoLibro = "Bolsillo", Editorial = editoriales[0], Genero = generos[3] },
+                new Libro { Titulo = "Orgullo y prejuicio", Autor = "Jane Austen", FechaLanzamiento = new DateTime(1813, 1, 28), PrecioCompra = 12.95m, Stock = 7, TipoLibro = "Tapa blanda", Editorial = editoriales[8], Genero = generos[4] },
+                new Libro { Titulo = "Sapiens", Autor = "Yuval Noah Harari", FechaLanzamiento = new DateTime(2011, 1, 1), PrecioCompra = 22.90m, Stock = 0, TipoLibro = "Tapa dura", Editorial = editoriales[4], Genero = generos[5] },
+                new Libro { Titulo = "Veinte poemas de amor", Autor = "Pablo Neruda", FechaLanzamiento = new DateTime(1924, 6, 1), PrecioCompra = 9.95m, Stock = 15, TipoLibro = "Bolsillo", Editorial = editoriales[9], Genero = generos[6] },
+                new Libro { Titulo = "Steve Jobs", Autor = "Walter Isaacson", FechaLanzamiento = new DateTime(2011, 10, 24), PrecioCompra = 26.50m, Stock = 3, TipoLibro = "Tapa dura", Editorial = editoriales[1], Genero = generos[7] },
+                new Libro { Titulo = "Diez negritos", Autor = "Agatha Christie", FechaLanzamiento = new DateTime(1939, 11, 6), PrecioCompra = 10.50m, Stock = 0, TipoLibro = "Bolsillo", Editorial = editoriales[3], Genero = generos[8] },
+                new Libro { Titulo = "La isla del tesoro", Autor = "Robert Louis Stevenson", FechaLanzamiento = new DateTime(1883, 11, 14), PrecioCompra = 11.90m, Stock = 9, TipoLibro = "Edición ilustrada", Editorial = editoriales[5], Genero = generos[9] }
             );
 
             dbcontext.SaveChanges();

@@ -4,10 +4,10 @@ namespace AppForSEII.API.Models
     {
         public Libro()
         {
-            
+
         }
 
-        public Libro(string titulo, string autor, DateTime fechaLanzamiento, double precioCompra, int stock)
+        public Libro(string titulo, string autor, DateTime fechaLanzamiento, decimal precioCompra, int stock)
         {
             Titulo = titulo;
             Autor = autor;
@@ -15,10 +15,10 @@ namespace AppForSEII.API.Models
             PrecioCompra = precioCompra;
             Stock = stock;
         }
-    
+
         [Key]
-        public int Id {get; set;} 
-        
+        public int Id { get; set; }
+
         [Required, StringLength(50, ErrorMessage = "El titulo no puede tener más de 50 caracteres.")]
         public string Titulo { get; set; }
 
@@ -31,25 +31,26 @@ namespace AppForSEII.API.Models
         public DateTime FechaLanzamiento { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(0.5, float.MaxValue, ErrorMessage = "Precio de venta debe ser mayor a 0.5")]
+        [Range(typeof(decimal), "0.50", "99999999.99",
+        ErrorMessage = "El precio debe estar entre 0,50 y 99999999,99.")]
         [System.ComponentModel.DataAnnotations.Display(Name = "PrecioCompra")]
         [Precision(10, 2)]
-        public double PrecioCompra { get; set; }
+        public decimal PrecioCompra { get; set; }
 
         [System.ComponentModel.DataAnnotations.Display(Name = "Stock")]
         [Range(0, int.MaxValue, ErrorMessage = "La cantidad mínima para la compra es 1")]
         public int Stock { get; set; }
-        
+
         // Relaciones con otras entidades
         public Editorial Editorial { get; set; }
         public Genero Genero { get; set; }
 
         public IList<ComprarItem> ComprarItems { get; set; }
 
-         public IList<SubastaItem> SubastaItems { get; set; }
-         public string TipoLibro { get; set; }
+        public IList<SubastaItem> SubastaItems { get; set; }
+        public string TipoLibro { get; set; }
 
-    
+
     }
 
 }
