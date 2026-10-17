@@ -61,6 +61,15 @@ namespace AppForSEII.API.Data
                 logger.LogError(ex, "An error occurred seeding the Subastas and SubastaItems in the Database.");
             }
 
+            try
+            {
+                SeedReposiciones(dbContext,admin);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the Reposiciones and ReposicionItems in the Database.");
+            }
+
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
@@ -370,6 +379,57 @@ public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
 
             dbcontext.SaveChanges();
         }
+        public static void SeedReposiciones(ApplicationDbContext dbcontext,ApplicationUser? admin)
+        {
+            if (dbcontext.Reposiciones.Any() || admin == null)
+                return;
 
+            // Se reponen los libros sin stock o con poco stock (It, Sapiens, Diez negritos, Steve Jobs y Dune)
+            List<Libro> libros = dbcontext.Libros.Where(l => l.Stock <= 5).OrderBy(l => l.Stock).ToList();
+            if (libros.Count == 0)
+                return;
+
+            // Comentario opcional: o null o entre 20 y 100 caracteres
+            string?[] comentarios = ["Reposición urgente por alta demanda en la tienda", null, "Reponer antes de la campaña de vuelta al cole", null, "Reposición solicitada por varios clientes habituales"];
+
+            for (int i = 0; i < 5; i++)
+            {
+                // Método de pago distinto en cada reposición, igual que en Compras
+                MetodosdePago metodoDePago;
+                switch (i % 3)
+                {
+                    case 0:
+                        metodoDePago = new Visa { NumeroTarjeta = "4111111111111111", FechaCaducidad = new DateTime(2030, 12, 31) };
+                        break;
+                    case 1:
+                        metodoDePago = new PayPal { NumeroTelefono = "612345600" };
+                        break;
+                    default:
+                        metodoDePago = new GooglePay { Email = "elena@uclm.es" };
+                        break;
+                }
+
+                Reposicion reposicion = new Reposicion(DateTime.Today.AddDays(-i), comentarios[i], metodoDePago, new List<ReposicionItem>());
+                reposicion.ApplicationUser = admin;
+
+                // Primer libro: se reponen entre 5 y 13 unidades a un 60 % de su precio de venta
+                Libro libro1 = libros[i % libros.Count];
+                reposicion.reposicionItems.Add(new ReposicionItem(5 + i * 2, libro1, reposicion, Math.Round(libro1.PrecioCompra * 0.6m, 2)));
+
+                // Las reposiciones impares llevan un segundo libro, distinto del primero
+                if (i % 2 == 1)
+                {
+                    Libro libro2 = libros[(i + 1) % libros.Count];
+                    reposicion.reposicionItems.Add(new ReposicionItem(3, libro2, reposicion, Math.Round(libro2.PrecioCompra * 0.6m, 2)));
+                }
+
+                // Se recalcula porque el constructor lo calculó con la lista aún vacía
+                reposicion.PrecioTotal = reposicion.reposicionItems.Sum(ri => ri.PrecioDeReposicion * ri.CantidadReposicion);
+
+                dbcontext.Reposiciones.Add(reposicion);
+            }
+
+            dbcontext.SaveChanges();
+        }
     }
 }
