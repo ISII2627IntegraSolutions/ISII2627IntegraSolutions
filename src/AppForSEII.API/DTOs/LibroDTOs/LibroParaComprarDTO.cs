@@ -13,7 +13,7 @@ namespace AppForSEII.API.DTOs.LibroDTOs
         {
             
         }
-        public LibroParaComprarDTO(int id, string titulo, DateTime fechaLanzamiento, string editorial, decimal precioCompra, Genero genero)
+        public LibroParaComprarDTO(int id, string titulo, DateTime fechaLanzamiento, string editorial, decimal precioCompra, string genero)
         {
             Id = id;
             Titulo = titulo;
@@ -44,7 +44,7 @@ namespace AppForSEII.API.DTOs.LibroDTOs
         [Precision(10, 2)]
         public decimal PrecioCompra { get; set; }
         [StringLength(50, ErrorMessage = "El género no puede tener más de 50 caracteres.")]
-        public Genero Genero { get; set; }
+        public string Genero { get; set; }
 
         public override bool Equals(object? obj)
         {
