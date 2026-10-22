@@ -243,6 +243,10 @@ namespace AppForSEII.API.Migrations
                     PrecioTotal = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     CodigoDescuento = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Apellidos = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MetodoDePagoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -325,7 +329,8 @@ namespace AppForSEII.API.Migrations
                 {
                     LibroId = table.Column<int>(type: "int", nullable: false),
                     CompraId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false)
+                    Cantidad = table.Column<int>(type: "int", precision: 10, scale: 2, nullable: false),
+                    PrecioCompra = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {

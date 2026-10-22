@@ -63,7 +63,7 @@ namespace AppForSEII.API.Data
 
             try
             {
-                SeedReposiciones(dbContext,admin);
+                SeedReposiciones(dbContext, admin);
             }
             catch (Exception ex)
             {
@@ -194,12 +194,12 @@ namespace AppForSEII.API.Data
         }
 
 
-        
-public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
-{
-    // Clientes que ya existen en el SeedData
-    string[] emails =
-    {
+
+        public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
+        {
+            // Clientes que ya existen en el SeedData
+            string[] emails =
+            {
         "peter@uclm.es",
         "lucia@uclm.es",
         "carlos@uclm.es",
@@ -212,9 +212,9 @@ public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
         "peter@uclm.es"
     };
 
-    // Libros que ya existen en la base de datos
-    string[] titulos =
-    {
+            // Libros que ya existen en la base de datos
+            string[] titulos =
+            {
         "Cien años de soledad",
         "El nombre del viento",
         "Dune",
@@ -227,124 +227,132 @@ public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
         "La isla del tesoro"
     };
 
-    // Recuperar libros y usuarios
-    var usuarios = emails.Select(email =>
-        dbContext.Users.OfType<ApplicationUser>()
-            .FirstOrDefault(u => u.UserName == email)
-    ).ToArray();
+            // Recuperar libros y usuarios
+            var usuarios = emails.Select(email =>
+                dbContext.Users.OfType<ApplicationUser>()
+                    .FirstOrDefault(u => u.UserName == email)
+            ).ToArray();
 
-    var libros = titulos.Select(titulo =>
-        dbContext.Libros.FirstOrDefault(l => l.Titulo == titulo)
-    ).ToArray();
+            var libros = titulos.Select(titulo =>
+                dbContext.Libros.FirstOrDefault(l => l.Titulo == titulo)
+            ).ToArray();
 
-    if (usuarios.Any(u => u == null) ||
-        libros.Any(l => l == null))
-    {
-        logger.LogWarning(
-            "No se pueden insertar compras: faltan usuarios o libros.");
-        return;
-    }
-
-    // Cada fila representa una compra:
-    // Índice libro 1, cantidad 1, índice libro 2, cantidad 2,
-    // índice libro 3, cantidad 3.
-    // -1 significa que no se añade otro libro.
-
-    int[,] datosCompras =
-    {
-        { 0, 2, 1, 1, -1, 0 },
-        { 2, 1, 4, 2, -1, 0 },
-        { 9, 2, 0, 1, 2, 1 },
-        { 3, 1, 6, 2, -1, 0 },
-        { 7, 1, 8, 1, 1, 1 },
-        { 5, 1, 4, 1, -1, 0 },
-        { 6, 3, 9, 1, -1, 0 },
-        { 1, 2, 2, 1, -1, 0 },
-        { 8, 1, 0, 2, 7, 1 },
-        { 4, 2, 3, 1, 5, 1 }
-    };
-
-    for (int i = 0; i < 10; i++)
-    {
-        string codigo = $"DEMO{i + 1:00}";
-
-        // Evitar compras duplicadas
-        if (dbContext.Compras.Any(c =>
-            c.CodigoDescuento == codigo))
-        {
-            continue;
-        }
-
-        // Crear método de pago según la compra
-        MetodosdePago metodoPago;
-
-        switch (i % 3)
-        {
-            case 0:
-                metodoPago = new Visa
-                {
-                    NumeroTarjeta = "4111111111111111",
-                    FechaCaducidad = new DateTime(2030, 12, 31)
-                };
-                break;
-
-            case 1:
-                metodoPago = new PayPal
-                {
-                    NumeroTelefono = $"6123456{i + 10}"
-                };
-                break;
-
-            default:
-                metodoPago = new GooglePay
-                {
-                    Email = $"cliente{i + 1}@example.com"
-                };
-                break;
-        }
-
-        // Crear compra
-        var items = new List<ComprarItem>();
-
-        var compra = new Compra(
-            new DateTime(2026, 10, 1).AddDays(i),
-            codigo,
-            metodoPago,
-            items
-        );
-
-        compra.ApplicationUser = usuarios[i]!;
-
-        // Añadir libros a la compra
-        for (int j = 0; j < 6; j += 2)
-        {
-            int indiceLibro = datosCompras[i, j];
-            int cantidad = datosCompras[i, j + 1];
-
-            if (indiceLibro >= 0 && cantidad > 0)
+            if (usuarios.Any(u => u == null) ||
+                libros.Any(l => l == null))
             {
-                items.Add(new ComprarItem(
-                    libros[indiceLibro]!,
-                    cantidad,
-                    compra
-                ));
+                logger.LogWarning(
+                    "No se pueden insertar compras: faltan usuarios o libros.");
+                return;
             }
+
+            // Cada fila representa una compra:
+            // Índice libro 1, cantidad 1, índice libro 2, cantidad 2,
+            // índice libro 3, cantidad 3.
+            // -1 significa que no se añade otro libro.
+
+            int[,] datosCompras =
+{
+    { 0, 2, 1, 2, -1, 0 },
+    { 2, 2, 4, 2, -1, 0 },
+    { 9, 2, 0, 2, 2, 2 },
+    { 3, 2, 6, 2, -1, 0 },
+    { 7, 2, 8, 2, 1, 2 },
+    { 5, 2, 4, 2, -1, 0 },
+    { 6, 3, 9, 2, -1, 0 },
+    { 1, 2, 2, 2, -1, 0 },
+    { 8, 2, 0, 2, 7, 2 },
+    { 4, 2, 3, 2, 5, 2 }
+};
+
+            for (int i = 0; i < 10; i++)
+            {
+                string codigo = $"DEMO{i + 1:00}";
+
+                // Evitar compras duplicadas
+                if (dbContext.Compras.Any(c =>
+                    c.CodigoDescuento == codigo))
+                {
+                    continue;
+                }
+
+                // Crear método de pago según la compra
+                MetodosdePago metodoPago;
+
+                switch (i % 3)
+                {
+                    case 0:
+                        metodoPago = new Visa
+                        {
+                            NumeroTarjeta = "4111111111111111",
+                            FechaCaducidad = new DateTime(2030, 12, 31)
+                        };
+                        break;
+
+                    case 1:
+                        metodoPago = new PayPal
+                        {
+                            NumeroTelefono = $"6123456{i + 10}"
+                        };
+                        break;
+
+                    default:
+                        metodoPago = new GooglePay
+                        {
+                            Email = $"cliente{i + 1}@example.com"
+                        };
+                        break;
+                }
+
+                // Crear compra
+                var items = new List<ComprarItem>();
+
+                var compra = new Compra(
+                    new DateTime(2026, 10, 1).AddDays(i),
+                    codigo,
+                    metodoPago,
+                    items
+                );
+
+                var usuario = usuarios[i]!;
+
+                compra.ApplicationUser = usuario;
+                compra.Nombre = usuario.Name ?? "Cliente";
+                compra.Apellidos = usuario.Surname ?? "De prueba";
+                compra.Direccion = $"Calle Mayor {i + 1}, Albacete";
+                compra.Telefono = string.IsNullOrWhiteSpace(usuario.PhoneNumber)
+                    ? "612345600"
+                    : usuario.PhoneNumber;
+
+                // Añadir libros a la compra
+                for (int j = 0; j < 6; j += 2)
+                {
+                    int indiceLibro = datosCompras[i, j];
+                    int cantidad = datosCompras[i, j + 1];
+
+                    if (indiceLibro >= 0 && cantidad > 0)
+                    {
+                        items.Add(new ComprarItem(
+                            libros[indiceLibro]!,
+                            cantidad,
+                            compra
+                        ));
+                    }
+                }
+
+                // Calcular el precio total
+                compra.PrecioTotal = items.Sum(
+                    item => item.PrecioCompra * item.Cantidad
+                );
+
+                // Guardar la compra y sus artículos
+                dbContext.Compras.Add(compra);
+            }
+
+            dbContext.SaveChanges();
+
+            logger.LogInformation(
+                "Seed de las 10 compras completado correctamente.");
         }
-
-        // Calcular el precio total
-        compra.PrecioTotal = items.Sum(
-            item => item.Libro.PrecioCompra * item.Cantidad
-        );
-
-        // Guardar la compra y sus artículos
-        dbContext.Compras.Add(compra);
-    }
-
-    dbContext.SaveChanges();
-
-    logger.LogInformation(
-        "Seed de las 10 compras completado correctamente.");
-}
 
         public static void SeedSubastas(ApplicationDbContext dbcontext, List<ApplicationUser> clientes)
         {
@@ -379,7 +387,7 @@ public static void SeedCompras(ApplicationDbContext dbContext, ILogger logger)
 
             dbcontext.SaveChanges();
         }
-        public static void SeedReposiciones(ApplicationDbContext dbcontext,ApplicationUser? admin)
+        public static void SeedReposiciones(ApplicationDbContext dbcontext, ApplicationUser? admin)
         {
             if (dbcontext.Reposiciones.Any() || admin == null)
                 return;
