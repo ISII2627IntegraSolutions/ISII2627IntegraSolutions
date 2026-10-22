@@ -54,6 +54,19 @@ namespace AppForSEII.API.DTOs.ComprarLibrosDTOs
                 return CompraItems.Sum(ri => ri.PrecioCompra * ri.Cantidad);
             }
         }
+        // Solo para Visa
+        [CreditCard]
+        public string? NumeroTarjeta { get; set; }
+
+        public DateTime? FechaCaducidad { get; set; }
+
+        // Solo para GooglePay
+        [EmailAddress]
+        public string? EmailGooglePay { get; set; }
+
+        // Solo para PayPal
+        [Phone]
+        public string? TelefonoPayPal { get; set; }
         public override bool Equals(object? obj)
         {
             return obj is CompraForCreateDTO dTO &&
