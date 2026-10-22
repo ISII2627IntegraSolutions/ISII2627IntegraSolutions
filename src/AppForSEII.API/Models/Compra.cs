@@ -8,7 +8,7 @@ namespace AppForSEII.API.Models
         }
         public Compra(DateTime fechaCompra, string? codigoDescuento, MetodosdePago metodoDePago, IList<ComprarItem> comprarItems)
         {
-            PrecioTotal = comprarItems.Sum(ri => ri.Libro.PrecioCompra * ri.Cantidad);
+            PrecioTotal = comprarItems.Sum(ri => ri.PrecioCompra * ri.Cantidad);
             FechaCompra = fechaCompra;
             CodigoDescuento = codigoDescuento;
             MetodoDePago = metodoDePago;
@@ -29,6 +29,17 @@ namespace AppForSEII.API.Models
         public string? CodigoDescuento { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public IList<ComprarItem> ComprarItems { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string Nombre {get; set;}
+        [Required]
+        [StringLength(100)]
+        public string Apellidos {get; set;}
+        [Required]
+        [StringLength(50)]
+        public string Direccion {get; set;}
+        [Required]
+        public string Telefono {get; set;}
 
 
 
