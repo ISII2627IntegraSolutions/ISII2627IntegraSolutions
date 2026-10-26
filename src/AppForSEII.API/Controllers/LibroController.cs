@@ -74,29 +74,30 @@ namespace AppForSEII.API.Controllers
             return Ok(libros);
         }
 
-        public async Task<ActionResult> GetLibrosParaReponer(string? genero,decimal? precioMaximo)
+         [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<LibroParaReponerDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetLibrosParaReponer(string? autor, string? genero)
         {
-         if(precioMaximo.HasValue && precioMaximo.Value < 0)
-            {
-             _logger.LogError("El precio máximo no puede ser negativo.");
-             return BadRequest("El precio máximo no puede ser negativo.");   
-            }
-            genero=genero?.Trim();
+            autor = autor?.Trim();
+            genero = genero?.Trim();
 
             var libros = await _context.Libros
-            .Where(l => l.Stock > 0 && (string.IsNullOrEmpty(genero) || l.Genero.Nombre == genero) &&
-            (!precioMaximo.HasValue || l.PrecioCompra <= precioMaximo.Value))
-            .OrderBy(l => l.Titulo)
-            .Select(l => new LibroParaComprarDTO(
-                l.Id,
-                l.Titulo,
-                l.FechaLanzamiento,
-                l.Editorial.Nombre,
-                l.PrecioCompra,
-                l.Genero.Nombre
-                ))
+                .Include(l => l.Genero)
+                .Where(l => l.Stock == 0
+                    && (string.IsNullOrEmpty(autor) || l.Autor.Contains(autor))
+                    && (string.IsNullOrEmpty(genero) || l.Genero.Nombre == genero))
+                .OrderBy(l => l.Titulo)
+                .Select(l => new LibroParaReponerDTO(
+                    l.Id,
+                    l.Titulo,
+                    l.FechaLanzamiento,
+                    l.Autor,
+                    l.PrecioCompra, // Libro no tiene precio de reposición: se usa el precio de compra
+                    l.Genero.Nombre))
                 .ToListAsync();
-            return Ok(libros);   
+
+            return Ok(libros);
         }
 
         
