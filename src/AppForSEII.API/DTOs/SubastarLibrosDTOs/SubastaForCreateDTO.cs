@@ -1,4 +1,4 @@
-// o que rellena el cliente al pujar (paso 5): sus datos, el método de pago y la lista de libros.
+
 namespace AppForSEII.API.DTOs.SubastarLibrosDTOs
 {
     public class SubastaForCreateDTO
