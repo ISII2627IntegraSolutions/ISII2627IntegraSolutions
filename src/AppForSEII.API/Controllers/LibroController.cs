@@ -98,5 +98,24 @@ namespace AppForSEII.API.Controllers
                 .ToListAsync();
             return Ok(libros);   
         }
+
+        
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<LibroParaSubastarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetLibrosParaSubastar(string? titulo, string? editorial)
+        {
+            var libros = await _context.Libros
+                .Include(l => l.Editorial)
+                .Where(l => l.Stock > 0
+                    && (l.Titulo.Contains(titulo) || titulo == null)
+                    && (l.Editorial.Nombre.Equals(editorial) || editorial == null))
+                .OrderBy(l => l.Titulo)
+                .Select(l => new LibroParaSubastarDTO(l.Id, l.Titulo, l.Editorial.Nombre, l.Autor, l.TipoLibro))
+                .ToListAsync();
+
+            return Ok(libros);
+        }
+        
     }
 }
