@@ -32,6 +32,18 @@ namespace AppForSEII.API.Models
         public ApplicationUser ApplicationUser { get; set; }
         public IList<ReposicionItem> reposicionItems { get; set; }
 
+        [Required]
+        [StringLength(50)]
+        public string Nombre {get; set;}
+        [Required]
+        [StringLength(100)]
+        public string Apellidos {get; set;}
+        [Required]
+        [StringLength(50)]
+        public string Direccion {get; set;}
+        [Required]
+        public string Telefono {get; set;}
+
 
     }
 
