@@ -26,7 +26,7 @@ namespace AppForSEII.API.DTOs.SubastarLibrosDTOs
         public string Editorial { get; set; }
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
-        [Range(typeof(decimal), "1", "99999999.99", ErrorMessage = "El precio de la puja debe ser como mínimo 1.")]
+                [Range(typeof(decimal), "1", "99999999.99", ParseLimitsInInvariantCulture = true, ConvertValueInInvariantCulture = true, ErrorMessage = "El precio de la puja debe ser como mínimo 1.")]
         public decimal PrecioPuja { get; set; }
 
         [StringLength(100, MinimumLength = 20, ErrorMessage = "La descripción debe tener entre 20 y 100 caracteres.")]
