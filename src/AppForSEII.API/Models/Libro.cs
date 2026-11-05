@@ -16,6 +16,27 @@ namespace AppForSEII.API.Models
             Stock = stock;
         }
 
+        //añadimos otro constructor para el testing. no modificamos el anterior para evitar conflictos con las clases donde se use
+        public Libro(
+            int id,
+            string titulo,
+            string autor,
+            decimal precioCompra,
+            int stock,
+            DateTime fechaLanzamiento,
+            Genero genero,
+            Editorial editorial)
+        {
+            Id = id;
+            Titulo = titulo;
+            Autor = autor;
+            PrecioCompra = precioCompra;
+            Stock = stock;
+            FechaLanzamiento = fechaLanzamiento;
+            Genero = genero;
+            Editorial = editorial;
+        }
+
         [Key]
         public int Id { get; set; }
 
