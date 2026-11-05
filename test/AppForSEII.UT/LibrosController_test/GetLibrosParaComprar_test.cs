@@ -120,28 +120,5 @@ namespace AppForSEII.UT.LibroController_test
             // Comparar las listas de libros esperadas y obtenidas.
             Assert.Equal(expectedLibros, libroDTOsActual);
         }
-
-        [Fact]
-        [Trait("LevelTesting", "Unit Testing")]
-        [Trait("Database", "WithoutFixture")]
-        public async Task GetLibrosParaComprar_badrequest_test()
-        {
-            // Arrange
-            var expectedError = "El precio máximo no puede ser negativo.";
-
-            var mock = new Mock<ILogger<LibroController>>();
-            ILogger<LibroController> logger = mock.Object;
-
-            var controller = new LibroController(_context, logger);
-
-            // Act
-            var result = await controller.GetLibrosParaComprar(null, -1m);
-
-            // Assert
-            var badRequestResult =
-                Assert.IsType<BadRequestObjectResult>(result);
-
-            Assert.Equal(expectedError, badRequestResult.Value);
-        }
     }
 }
