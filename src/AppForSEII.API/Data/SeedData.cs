@@ -398,8 +398,11 @@ namespace AppForSEII.API.Data
             // Guarda las 5 subastas en la base de datos
             dbcontext.SaveChanges();
         }
+       // ===== SEED del CU2: mete 5 reposiciones de ejemplo al arrancar la API (lo llama Initialize, más arriba) =====
+        // Todas son del administrador (elena@uclm.es); sirven para probar GetDetailsForReposicion en Swagger con los ids 1 a 5
         public static void SeedReposiciones(ApplicationDbContext dbcontext, ApplicationUser? admin)
         {
+            // Si ya hay reposiciones o no existe el admin, no hace nada (así no se duplican)
             if (dbcontext.Reposiciones.Any() || admin == null)
                 return;
 
@@ -411,9 +414,11 @@ namespace AppForSEII.API.Data
             // Comentario opcional: o null o entre 20 y 100 caracteres
             string?[] comentarios = ["Reposición urgente por alta demanda en la tienda", null, "Reponer antes de la campaña de vuelta al cole", null, "Reposición solicitada por varios clientes habituales"];
 
+            // Crea 5 reposiciones (i = 0, 1, 2, 3, 4)
             for (int i = 0; i < 5; i++)
             {
                 // Método de pago distinto en cada reposición, igual que en Compras
+                // i % 3 = resto de dividir entre 3 (0, 1, 2, 0, 1): va alternando Visa, PayPal y GooglePay
                 MetodosdePago metodoDePago;
                 switch (i % 3)
                 {
@@ -428,6 +433,7 @@ namespace AppForSEII.API.Data
                         break;
                 }
 
+                // Cada reposición es de un día distinto (hoy, ayer...) y del administrador
                 Reposicion reposicion = new Reposicion(DateTime.Today.AddDays(-i), comentarios[i], metodoDePago, new List<ReposicionItem>());
                 reposicion.ApplicationUser = admin;
 
@@ -445,9 +451,11 @@ namespace AppForSEII.API.Data
                 // Se recalcula porque el constructor lo calculó con la lista aún vacía
                 reposicion.PrecioTotal = reposicion.reposicionItems.Sum(ri => ri.PrecioDeReposicion * ri.CantidadReposicion);
 
+                // Marca la reposición para insertarla
                 dbcontext.Reposiciones.Add(reposicion);
             }
 
+            // Guarda las 5 reposiciones en la base de datos
             dbcontext.SaveChanges();
         }
     }

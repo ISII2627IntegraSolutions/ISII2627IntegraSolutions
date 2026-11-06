@@ -155,18 +155,23 @@ namespace AppForSEII.API.Controllers
             return Ok(libros);
         }
 
-        // HTTP GET:
+         // HTTP GET:
         // Obtiene los libros que pueden utilizarse para una reposición.
+        // ===== CU2 SELECT: GET /api/Libro/GetLibrosParaReponer?autor=...&genero=... =====
+        // Lo prueba: test/AppForSEII.UT/LibrosController_test/GetLibrosParaReponer_test.cs
         [HttpGet]
         [Route("[action]")]
 
         // Indicamos el tipo de respuesta esperado.
         [ProducesResponseType(typeof(IList<LibroParaReponerDTO>), (int)HttpStatusCode.OK)]
+        // autor y genero llevan ? = son opcionales (si no se mandan, llegan como null)
+        //  un filtro nuevo (p. ej. titulo) se añade aquí como "string? titulo" y su condición en el Where
         public async Task<ActionResult> GetLibrosParaReponer(
             string? autor,
             string? genero)
         {
             // Eliminamos los espacios innecesarios del autor.
+               // (?. = si autor es null no hace nada y sigue siendo null)
             autor = autor?.Trim();
 
             // Eliminamos los espacios innecesarios del género.
@@ -177,12 +182,13 @@ namespace AppForSEII.API.Controllers
 
                 // Incluimos el género relacionado con cada libro.
                 // Así podemos acceder a sus datos de navegación.
+                 // (Include = JOIN con la tabla Generos; sin él, l.Genero sería null)
                 .Include(l => l.Genero)
 
                 // Aplicamos los filtros de la reposición.
                 .Where(l =>
 
-                    // Solo seleccionamos libros sin stock.
+                    // Solo seleccionamos libros sin stock (paso 2 y FA0 del CU2).
                     l.Stock == 0
 
                     // Si no se indica autor, no filtramos por él.
@@ -192,6 +198,7 @@ namespace AppForSEII.API.Controllers
 
                     // Si no se indica género, no filtramos por él.
                     // Si se indica, debe coincidir exactamente.
+                    //  aquí iría la condición del filtro nuevo, p. ej. && (string.IsNullOrEmpty(titulo) || l.Titulo.Contains(titulo))
                     && (string.IsNullOrEmpty(genero)
                         || l.Genero.Nombre == genero))
 
@@ -199,6 +206,7 @@ namespace AppForSEII.API.Controllers
                 .OrderBy(l => l.Titulo)
 
                 // Convertimos cada libro en un DTO de reposición.
+                  // para mostrar otro dato, se añade al LibroParaReponerDTO y aquí, en el mismo orden que su constructor
                 .Select(l => new LibroParaReponerDTO(
                     l.Id,
                     l.Titulo,
