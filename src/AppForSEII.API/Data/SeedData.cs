@@ -354,25 +354,34 @@ namespace AppForSEII.API.Data
                 "Seed de las 10 compras completado correctamente.");
         }
 
+        
+                // ===== SEED del CU3: mete 5 subastas de ejemplo al arrancar la API (lo llama Initialize, más arriba) =====
+        // Sirven para probar GetDetailsForSubasta en Swagger con los ids 1 a 5
         public static void SeedSubastas(ApplicationDbContext dbcontext, List<ApplicationUser> clientes)
         {
+            // Si ya hay subastas en la BD no hace nada (así no se duplican cada vez que arranca)
             if (dbcontext.Subastas.Any())
                 return;
 
             // Solo se pueden subastar libros con stock (se quedan fuera It, Sapiens y Diez negritos)
             List<Libro> libros = dbcontext.Libros.Where(l => l.Stock > 0).ToList();
+            // Sin libros o sin clientes no se pueden crear subastas
             if (libros.Count == 0 || clientes.Count == 0)
                 return;
 
             // Descripción opcional: o null o entre 20 y 100 caracteres
             string?[] descripciones = ["Ejemplar en perfecto estado, sin subrayados", null, "Primera edición con la portada original", "Libro firmado por el autor en la primera página", null];
 
+            // Crea 5 subastas (i = 0, 1, 2, 3, 4)
             for (int i = 0; i < 5; i++)
             {
+                // Método de pago genérico: por eso en el details salen como "Desconocido"
+                // MODIFICAR: para que salga un método real se crearía aquí, p. ej., new PayPal { NumeroTelefono = "..." }
                 MetodosdePago metodoDePago = new MetodosdePago();
+                // Cada subasta es de un cliente distinto y de un día distinto (hoy, ayer, anteayer...)
                 Subasta subasta = new Subasta(DateTime.Today.AddDays(-i), clientes[i], metodoDePago, new List<SubastaItem>());
 
-                // Primer libro de la subasta
+                // Primer libro de la subasta (pujas de 10, 15, 20, 25 y 30)
                 subasta.SubastaItems.Add(new SubastaItem(libros[i], subasta, 10 + i * 5, descripciones[i]));
 
                 // Las subastas pares llevan un segundo libro, distinto del primero (por la clave LibroId + SubastaId)
@@ -382,9 +391,11 @@ namespace AppForSEII.API.Data
                 // Se recalcula porque el constructor lo calculó con la lista aún vacía
                 subasta.PrecioSubasta = subasta.SubastaItems.Sum(si => si.PrecioPuja);
 
+                // Marca la subasta para insertarla
                 dbcontext.Subastas.Add(subasta);
             }
 
+            // Guarda las 5 subastas en la base de datos
             dbcontext.SaveChanges();
         }
         public static void SeedReposiciones(ApplicationDbContext dbcontext, ApplicationUser? admin)

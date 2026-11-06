@@ -1,3 +1,6 @@
+// PRUEBA UNITARIA del POST del CU3: CreateSubasta (SubastasController)
+// Error_test: un Theory con un caso por cada error del controlador (todos devuelven 400 con su mensaje)
+// Success_test: con datos correctos crea la subasta y devuelve 201 con el resumen
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.SubastarLibrosDTOs;
 
@@ -25,12 +28,14 @@ namespace AppForSEII.UT.SubastasController_test
             libro2.Editorial = salamandra;
             libro2.Genero = genero;
 
+            // Libro sin stock: para probar el FA0
             var libro3 = new Libro("It", "Stephen King", new DateTime(1986, 9, 15), 18.00m, 0);
             libro3.Id = 3;
             libro3.TipoLibro = "Bolsillo";
             libro3.Editorial = alfaguara;
             libro3.Genero = genero;
 
+            // Único usuario registrado: lucia@uclm.es
             var usuario = new ApplicationUser("1", "Lucía", "García López", "lucia@uclm.es");
             usuario.PhoneNumber = "612345671";
 
@@ -42,8 +47,11 @@ namespace AppForSEII.UT.SubastasController_test
         }
 
         // Casos de error: (datos de la subasta, mensaje de error esperado)
+        // Cada caso provoca un solo error, para poder comprobar su mensaje exacto
+        // MODIFICAR: si en el examen añades una validación al POST, añade aquí un caso con su mensaje
         public static IEnumerable<object[]> TestCasesFor_CreateSubasta_Error()
         {
+            // Puja correcta que se reutiliza en varios casos
             var item1 = new SubastaItemDTO(1, "Cien años de soledad", "Gabriel García Márquez", "Alfaguara", 15, null);
 
             // FA4: ningún libro
@@ -91,6 +99,7 @@ namespace AppForSEII.UT.SubastasController_test
                 new List<SubastaItemDTO> { new SubastaItemDTO(1, "Cien años de soledad", "Gabriel García Márquez", "Alfaguara", 0, null) });
             pujaIncorrecta.TelefonoPayPal = "612345671";
 
+            // Cada fila: los datos que se mandan y el mensaje que tiene que devolver el controlador
             var allTests = new List<object[]>
             {
                 new object[] { sinLibros, "Debes seleccionar al menos un libro." },
@@ -124,6 +133,7 @@ namespace AppForSEII.UT.SubastasController_test
             // Assert: devuelve 400 con el mensaje de error esperado
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            // Errors es un diccionario (campo -> mensajes): se coge el primer mensaje del primer campo
             var errorActual = problemDetails.Errors.First().Value[0];
             Assert.Equal(errorExpected, errorActual);
         }
@@ -136,6 +146,7 @@ namespace AppForSEII.UT.SubastasController_test
             ILogger<SubastasController> logger = mock.Object;
             var controller = new SubastasController(_context, logger);
 
+            // Dos pujas correctas: una con descripción y otra sin ella
             var items = new List<SubastaItemDTO>
             {
                 new SubastaItemDTO(1, "Cien años de soledad", "Gabriel García Márquez", "Alfaguara", 15, "Libro en muy buen estado de conservación"),
@@ -144,6 +155,7 @@ namespace AppForSEII.UT.SubastasController_test
             var subastaForCreate = new SubastaForCreateDTO("lucia@uclm.es", "Lucía", "García López", "612345671", "PayPal", items);
             subastaForCreate.TelefonoPayPal = "612345671";
 
+            // Resumen esperado: Id 1 porque es la primera subasta de la base de datos en memoria
             var expectedSubasta = new SubastaDetailDTO(1, DateTime.Today, "lucia@uclm.es", "Lucía", "García López", "612345671", "PayPal", items);
 
             // Act

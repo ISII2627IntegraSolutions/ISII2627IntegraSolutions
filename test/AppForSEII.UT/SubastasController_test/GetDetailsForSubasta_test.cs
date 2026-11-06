@@ -1,3 +1,5 @@
+// PRUEBA UNITARIA del DETAILS del CU3: GetDetailsForSubasta (SubastasController)
+// Dos pruebas: NotFound (id que no existe -> 404) y Found (id que existe -> 200 con el resumen correcto)
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.SubastarLibrosDTOs;
 
@@ -25,9 +27,11 @@ namespace AppForSEII.UT.SubastasController_test
             libro2.Editorial = salamandra;
             libro2.Genero = genero;
 
+            // Cliente de la subasta (el teléfono no va en el constructor, se pone aparte)
             var usuario = new ApplicationUser("1", "Lucía", "García López", "lucia@uclm.es");
             usuario.PhoneNumber = "612345671";
 
+            // Método de pago real (PayPal) para que en el details salga "PayPal" y no "Desconocido"
             var paypal = new PayPal();
             paypal.NumeroTelefono = "612345671";
 
@@ -37,6 +41,7 @@ namespace AppForSEII.UT.SubastasController_test
             subasta.SubastaItems.Add(new SubastaItem(libro2, subasta, 15, null));
             subasta.PrecioSubasta = 25;
 
+            // Se guarda todo en la base de datos en memoria (la subasta tendrá Id = 1)
             _context.Generos.Add(genero);
             _context.Editoriales.AddRange(alfaguara, salamandra);
             _context.Libros.AddRange(libro1, libro2);
@@ -45,6 +50,7 @@ namespace AppForSEII.UT.SubastasController_test
             _context.SaveChanges();
         }
 
+        // [Fact] = prueba única, sin casos distintos
         [Fact]
         public async Task GetDetailsForSubasta_NotFound_test()
         {
@@ -56,7 +62,7 @@ namespace AppForSEII.UT.SubastasController_test
             // Act: el id 0 no existe
             var result = await controller.GetDetailsForSubasta(0);
 
-            // Assert
+            // Assert: tiene que devolver 404 (NotFoundResult)
             Assert.IsType<NotFoundResult>(result);
         }
 
@@ -68,6 +74,8 @@ namespace AppForSEII.UT.SubastasController_test
             ILogger<SubastasController> logger = mock.Object;
             var controller = new SubastasController(_context, logger);
 
+            // Resumen que debería devolver el controlador para la subasta 1
+            // MODIFICAR: si en el examen añades un dato al SubastaDetailDTO, hay que añadirlo también aquí
             var expectedItems = new List<SubastaItemDTO>
             {
                 new SubastaItemDTO(1, "Cien años de soledad", "Gabriel García Márquez", "Alfaguara", 10, "Ejemplar en perfecto estado, sin subrayados"),
@@ -78,7 +86,7 @@ namespace AppForSEII.UT.SubastasController_test
             // Act
             var result = await controller.GetDetailsForSubasta(1);
 
-            // Assert
+            // Assert: 200 (OkObjectResult) con un SubastaDetailDTO igual al esperado (usa su Equals)
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualSubasta = Assert.IsType<SubastaDetailDTO>(okResult.Value);
             Assert.Equal(expectedSubasta, actualSubasta);
