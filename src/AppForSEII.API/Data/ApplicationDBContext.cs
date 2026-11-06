@@ -21,8 +21,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Reposicion> Reposiciones {get; set; }
     public DbSet<ReposicionItem> ReposicionItems {get; set; }
     
+        // CU3 Subastar libros: tablas Subastas y SubastaItems de la base de datos
     public DbSet<Subasta> Subastas {get; set; }
     public DbSet<SubastaItem> SubastaItems {get; set; }
+
+        // Métodos de pago (herencia TPH: una sola tabla con una columna que dice si es Visa, PayPal o GooglePay)
 
     public DbSet<MetodosdePago> MetodosdePago {get; set; }
     public DbSet<Visa> Visas {get; set; }

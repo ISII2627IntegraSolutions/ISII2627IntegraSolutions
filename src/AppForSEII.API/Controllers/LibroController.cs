@@ -214,13 +214,17 @@ namespace AppForSEII.API.Controllers
             return Ok(libros);
         }
 
-        // HTTP GET:
+                // HTTP GET:
         // Obtiene los libros disponibles para realizar una subasta.
+        // ===== CU3 SELECT: GET /api/Libro/GetLibrosParaSubastar?titulo=...&editorial=... =====
+        // Lo prueba: test/AppForSEII.UT/LibrosController_test/GetLibrosParaSubastar_test.cs
         [HttpGet]
         [Route("[action]")]
 
         // Indicamos que devuelve una lista de LibroParaSubastarDTO.
         [ProducesResponseType(typeof(IList<LibroParaSubastarDTO>), (int)HttpStatusCode.OK)]
+        // titulo y editorial llevan ? = son opcionales (si no se mandan, llegan como null)
+        // MODIFICAR: un filtro nuevo (p. ej. autor) se añade aquí como "string? autor" y su condición en el Where
         public async Task<ActionResult> GetLibrosParaSubastar(
             string? titulo,
             string? editorial)
@@ -229,12 +233,13 @@ namespace AppForSEII.API.Controllers
             var libros = await _context.Libros
 
                 // Incluimos la editorial relacionada con cada libro.
+                // (Include = JOIN con la tabla Editoriales; sin él, l.Editorial sería null)
                 .Include(l => l.Editorial)
 
                 // Aplicamos las condiciones de búsqueda.
                 .Where(l =>
 
-                    // Solo se pueden seleccionar libros con stock disponible.
+                    // Solo se pueden seleccionar libros con stock disponible (FA0 del CU3).
                     l.Stock > 0
 
                     // Si se introduce un título, buscamos coincidencias.
@@ -243,6 +248,7 @@ namespace AppForSEII.API.Controllers
 
                     // Si se introduce una editorial, debe coincidir.
                     // Si editorial es null, no aplicamos este filtro.
+                    // MODIFICAR: aquí iría la condición del filtro nuevo, p. ej. && (l.Autor.Contains(autor) || autor == null)
                     && (l.Editorial.Nombre.Equals(editorial)
                         || editorial == null))
 
@@ -250,6 +256,7 @@ namespace AppForSEII.API.Controllers
                 .OrderBy(l => l.Titulo)
 
                 // Convertimos cada entidad Libro en un DTO.
+                // MODIFICAR: para mostrar otro dato, se añade al LibroParaSubastarDTO y aquí, en el mismo orden que su constructor
                 .Select(l => new LibroParaSubastarDTO(
                     l.Id,
                     l.Titulo,

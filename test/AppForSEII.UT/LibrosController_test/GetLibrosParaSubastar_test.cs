@@ -1,3 +1,6 @@
+// PRUEBA UNITARIA del SELECT del CU3: GetLibrosParaSubastar (LibroController)
+// Hereda de AppForSEII4SqliteUT: cada prueba usa una base de datos SQLite en memoria nueva y vacía
+// Estructura de cada prueba: Arrange (preparar), Act (llamar al método) y Assert (comprobar)
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.LibroDTOs;
 
@@ -6,9 +9,10 @@ namespace AppForSEII.UT.LibroController_test
     // Pruebas del select del CU3: GetLibrosParaSubastar
     public class GetLibrosParaSubastar_test : AppForSEII4SqliteUT
     {
-        // Constructor: mete los datos de prueba en la base de datos en memoria
+        // Constructor: mete los datos de prueba en la base de datos en memoria (se ejecuta antes de cada prueba)
         public GetLibrosParaSubastar_test()
         {
+            // Libro necesita un género y una editorial (relaciones obligatorias)
             var genero = new Genero(1, "Novela", new List<Libro>());
             var alfaguara = new Editorial(1, "Alfaguara", new List<Libro>());
             var salamandra = new Editorial(2, "Salamandra", new List<Libro>());
@@ -33,6 +37,7 @@ namespace AppForSEII.UT.LibroController_test
             libro3.Editorial = alfaguara;
             libro3.Genero = genero;
 
+            // Se añaden al contexto y se guardan en la base de datos en memoria
             _context.Generos.Add(genero);
             _context.Editoriales.AddRange(alfaguara, salamandra);
             _context.Libros.AddRange(libro1, libro2, libro3);
@@ -40,8 +45,11 @@ namespace AppForSEII.UT.LibroController_test
         }
 
         // Casos: (filtro título, filtro editorial, libros que se esperan)
+        // MemberData: cada object[] de la lista es una ejecución de la prueba con esos parámetros
+        // MODIFICAR: si en el examen añades un filtro al select, añade aquí un caso nuevo con ese filtro
         public static IEnumerable<object?[]> TestCasesFor_GetLibrosParaSubastar_OK()
         {
+            // Lo que debería devolver el controlador para cada libro con stock
             var libroDTO1 = new LibroParaSubastarDTO(1, "Cien años de soledad", "Alfaguara", "Gabriel García Márquez", "Tapa dura");
             var libroDTO2 = new LibroParaSubastarDTO(2, "El nombre del viento", "Salamandra", "Patrick Rothfuss", "Tapa blanda");
 
@@ -60,21 +68,23 @@ namespace AppForSEII.UT.LibroController_test
             return allTests;
         }
 
+        // [Theory] = la misma prueba se repite con cada caso de MemberData
         [Theory]
         [MemberData(nameof(TestCasesFor_GetLibrosParaSubastar_OK))]
         public async Task GetLibrosParaSubastar_OK_test(string? titulo, string? editorial, List<LibroParaSubastarDTO> expectedLibros)
         {
-            // Arrange
+            // Arrange: logger falso (Mock) y el controlador con la base de datos en memoria
             var mock = new Mock<ILogger<LibroController>>();
             ILogger<LibroController> logger = mock.Object;
             var controller = new LibroController(_context, logger);
 
-            // Act
+            // Act: se llama al método igual que lo haría la web
             var result = await controller.GetLibrosParaSubastar(titulo, editorial);
 
-            // Assert
+            // Assert: tiene que ser un 200 (OkObjectResult) con una lista de LibroParaSubastarDTO
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualLibros = Assert.IsType<List<LibroParaSubastarDTO>>(okResult.Value);
+            // Assert.Equal compara las listas elemento a elemento usando el Equals del DTO
             Assert.Equal(expectedLibros, actualLibros);
         }
     }
