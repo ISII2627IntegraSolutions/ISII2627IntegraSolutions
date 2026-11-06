@@ -1,3 +1,6 @@
+// PRUEBA UNITARIA del POST del CU2: CreateReposicion (ReposicionesController)
+// Error_test: un Theory con un caso por cada error del controlador (todos devuelven 400 con su mensaje)
+// Success_test: con datos correctos crea la reposición, devuelve 201 y sube el stock del libro
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.ReponerLibrosDTOs;
 
@@ -24,13 +27,13 @@ namespace AppForSEII.UT.ReposicionesController_test
             libro2.TipoLibro = "Bolsillo";
             libro2.Editorial = alfaguara;
             libro2.Genero = novela;
-
+             // Libro con stock: para probar que no se puede reponer (FA0)
             var libro3 = new Libro("Cien años de soledad", "Gabriel García Márquez", new DateTime(1967, 5, 30), 19.95m, 12);
             libro3.Id = 3;
             libro3.TipoLibro = "Tapa dura";
             libro3.Editorial = alfaguara;
             libro3.Genero = novela;
-
+             // Único usuario registrado: elena@uclm.es
             var usuario = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
             usuario.PhoneNumber = "600000000";
 
@@ -42,8 +45,11 @@ namespace AppForSEII.UT.ReposicionesController_test
         }
 
         // Casos de error: (datos de la reposición, mensaje de error esperado)
+          // Cada caso provoca un solo error, para poder comprobar su mensaje exacto
+        // MODIFICAR: si en el examen añades una validación al POST, añade aquí un caso con su mensaje
         public static IEnumerable<object[]> TestCasesFor_CreateReposicion_Error()
         {
+            // Libro correcto que se reutiliza en varios casos
             var item1 = new ReposicionItemDTO(1, "It", "Stephen King", 18.00m, 5);
 
             // FA2: ningún libro
@@ -90,7 +96,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             var cantidadIncorrecta = new ReposicionForCreateDTO("elena@uclm.es", "Elena", "Navarro", "Martínez", "600000000", "PayPal", null,
                 new List<ReposicionItemDTO> { new ReposicionItemDTO(1, "It", "Stephen King", 18.00m, 1) });
             cantidadIncorrecta.TelefonoPayPal = "600000000";
-
+            // Cada fila: los datos que se mandan y el mensaje que tiene que devolver el controlador
             var allTests = new List<object[]>
             {
                 new object[] { sinLibros, "Debes seleccionar al menos un libro." },
@@ -124,6 +130,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             // Assert: devuelve 400 con el mensaje de error esperado
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+             // Errors es un diccionario (campo -> mensajes): se coge el primer mensaje del primer campo
             var errorActual = problemDetails.Errors.First().Value[0];
             Assert.Equal(errorExpected, errorActual);
         }
@@ -146,7 +153,7 @@ namespace AppForSEII.UT.ReposicionesController_test
                 "Reposición urgente para la tienda", items);
             reposicionForCreate.NumeroTarjeta = "4111111111111111";
             reposicionForCreate.FechaCaducidad = DateTime.Today.AddYears(1);
-
+             // Resumen esperado: Id 1 porque es la primera reposición de la base de datos en memoria
             var expectedReposicion = new ReposicionDetailDTO(1, DateTime.Today, "elena@uclm.es", "Elena", "Navarro", "Martínez",
                 "600000000", "Visa", "Reposición urgente para la tienda", items);
 

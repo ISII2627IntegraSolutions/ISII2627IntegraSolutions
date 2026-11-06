@@ -1,3 +1,5 @@
+// PRUEBA UNITARIA del DETAILS del CU2: GetDetailsForReposicion (ReposicionesController)
+// Dos pruebas: NotFound (id que no existe -> 404) y Found (id que existe -> 200 con el resumen correcto)
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.ReponerLibrosDTOs;
 
@@ -25,10 +27,10 @@ namespace AppForSEII.UT.ReposicionesController_test
             libro2.Editorial = alfaguara;
             libro2.Genero = novela;
 
-            // Los dos apellidos van juntos en Surname
+            // Los dos apellidos van juntos en Surname(CrearDetalle los separa por el espacio)
             var usuario = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
             usuario.PhoneNumber = "600000000";
-
+             // Método de pago real (Visa) para que en el details salga "Visa"
             var visa = new Visa();
             visa.NumeroTarjeta = "4111111111111111";
             visa.FechaCaducidad = new DateTime(2028, 12, 31);
@@ -39,7 +41,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             reposicion.reposicionItems.Add(new ReposicionItem(5, libro1, reposicion, 18.00m));
             reposicion.reposicionItems.Add(new ReposicionItem(3, libro2, reposicion, 10.50m));
             reposicion.PrecioTotal = 5 * 18.00m + 3 * 10.50m;
-
+            // Se guarda todo en la base de datos en memoria (la reposición tendrá Id = 1)
             _context.Generos.AddRange(novela, terror);
             _context.Editoriales.Add(alfaguara);
             _context.Libros.AddRange(libro1, libro2);
@@ -47,7 +49,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             _context.Reposiciones.Add(reposicion);
             _context.SaveChanges();
         }
-
+         // [Fact] = prueba única, sin casos distintos
         [Fact]
         public async Task GetDetailsForReposicion_NotFound_test()
         {
@@ -59,7 +61,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             // Act: el id 0 no existe
             var result = await controller.GetDetailsForReposicion(0);
 
-            // Assert
+            // Assert: tiene que devolver 404 (NotFoundResult)
             Assert.IsType<NotFoundResult>(result);
         }
 
@@ -70,7 +72,8 @@ namespace AppForSEII.UT.ReposicionesController_test
             var mock = new Mock<ILogger<ReposicionesController>>();
             ILogger<ReposicionesController> logger = mock.Object;
             var controller = new ReposicionesController(_context, logger);
-
+            // Resumen que debería devolver el controlador para la reposición 1 (apellidos ya separados)
+            // MODIFICAR: si en el examen añades un dato al ReposicionDetailDTO, hay que añadirlo también aquí
             var expectedItems = new List<ReposicionItemDTO>
             {
                 new ReposicionItemDTO(1, "It", "Stephen King", 18.00m, 5),
@@ -82,7 +85,7 @@ namespace AppForSEII.UT.ReposicionesController_test
             // Act
             var result = await controller.GetDetailsForReposicion(1);
 
-            // Assert
+            // Assert: 200 (OkObjectResult) con un ReposicionDetailDTO igual al esperado (usa su Equals)
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualReposicion = Assert.IsType<ReposicionDetailDTO>(okResult.Value);
             Assert.Equal(expectedReposicion, actualReposicion);

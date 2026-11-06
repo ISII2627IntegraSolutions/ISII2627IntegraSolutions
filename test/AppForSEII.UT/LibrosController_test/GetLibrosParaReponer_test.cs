@@ -1,3 +1,6 @@
+// PRUEBA UNITARIA del SELECT del CU2: GetLibrosParaReponer (LibroController)
+// Hereda de AppForSEII4SqliteUT: cada prueba usa una base de datos SQLite en memoria nueva y vacía
+// Estructura de cada prueba: Arrange (preparar), Act (llamar al método) y Assert (comprobar)
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.LibroDTOs;
 
@@ -9,6 +12,7 @@ namespace AppForSEII.UT.LibroController_test
         // Constructor: mete los datos de prueba en la base de datos en memoria
         public GetLibrosParaReponer_test()
         {
+             // Libro necesita un género y una editorial (relaciones obligatorias)
             var novela = new Genero(1, "Novela", new List<Libro>());
             var terror = new Genero(2, "Terror", new List<Libro>());
             var alfaguara = new Editorial(1, "Alfaguara", new List<Libro>());
@@ -32,7 +36,7 @@ namespace AppForSEII.UT.LibroController_test
             libro3.TipoLibro = "Tapa dura";
             libro3.Editorial = alfaguara;
             libro3.Genero = novela;
-
+             // Se añaden al contexto y se guardan en la base de datos en memoria
             _context.Generos.AddRange(novela, terror);
             _context.Editoriales.Add(alfaguara);
             _context.Libros.AddRange(libro1, libro2, libro3);
@@ -40,8 +44,11 @@ namespace AppForSEII.UT.LibroController_test
         }
 
         // Casos: (filtro autor, filtro género, libros que se esperan)
+        // MemberData: cada object[] de la lista es una ejecución de la prueba con esos parámetros
+        // MODIFICAR: si en el examen añades un filtro al select, añade aquí un caso nuevo con ese filtro
         public static IEnumerable<object?[]> TestCasesFor_GetLibrosParaReponer_OK()
         {
+             // Lo que debería devolver el controlador para cada libro sin stock (el precio es el PrecioCompra)
             var libroDTO1 = new LibroParaReponerDTO(1, "It", new DateTime(1986, 9, 15), "Stephen King", 18.00m, "Terror");
             var libroDTO2 = new LibroParaReponerDTO(2, "Diez negritos", new DateTime(1939, 11, 6), "Agatha Christie", 10.50m, "Novela");
 
@@ -59,22 +66,23 @@ namespace AppForSEII.UT.LibroController_test
 
             return allTests;
         }
-
+        // [Theory] = la misma prueba se repite con cada caso de MemberData
         [Theory]
         [MemberData(nameof(TestCasesFor_GetLibrosParaReponer_OK))]
         public async Task GetLibrosParaReponer_OK_test(string? autor, string? genero, List<LibroParaReponerDTO> expectedLibros)
         {
-            // Arrange
+            // Arrange: logger falso (Mock) y el controlador con la base de datos en memoria
             var mock = new Mock<ILogger<LibroController>>();
             ILogger<LibroController> logger = mock.Object;
             var controller = new LibroController(_context, logger);
 
-            // Act
+            // Act: se llama al método igual que lo haría la web
             var result = await controller.GetLibrosParaReponer(autor, genero);
 
-            // Assert
+            // Assert: tiene que ser un 200 (OkObjectResult) con una lista de LibroParaReponerDTO
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualLibros = Assert.IsType<List<LibroParaReponerDTO>>(okResult.Value);
+            // Assert.Equal compara las listas elemento a elemento usando el Equals del DTO
             Assert.Equal(expectedLibros, actualLibros);
         }
     }

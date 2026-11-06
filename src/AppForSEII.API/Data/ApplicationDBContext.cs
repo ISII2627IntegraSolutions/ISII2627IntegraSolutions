@@ -18,6 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Compra> Compras {get; set; }
     public DbSet<ComprarItem> ComprarItems {get; set; }
     public DbSet<Genero> Generos {get; set; }
+    // CU2 Reponer libros: tablas Reposiciones y ReposicionItems de la base de datos
     public DbSet<Reposicion> Reposiciones {get; set; }
     public DbSet<ReposicionItem> ReposicionItems {get; set; }
     
