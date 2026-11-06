@@ -1,0 +1,5 @@
+poniendo cd     src/AppForSEII.API
+dotnet ef database update 0
+dotnet ef migrations remove
+dotnet ef migrations add CreateIdentitySchema
+dotnet ef database update
