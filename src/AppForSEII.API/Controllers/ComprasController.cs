@@ -7,6 +7,7 @@ using AppForSEII.API.DTOs.ComprarLibrosDTOs;
 using AppForSEII.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace AppForSEII.API.Controllers
@@ -327,6 +328,7 @@ namespace AppForSEII.API.Controllers
                 // Devolvemos HTTP 400.
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
+         
 
             // ------------------------------------------------------------
             // 6. RECUPERAR LOS LIBROS DE LA BASE DE DATOS
@@ -381,7 +383,10 @@ namespace AppForSEII.API.Controllers
                         $"No hay stock suficiente de '{libro.Titulo}'. " +
                         $"Unidades disponibles: {libro.Stock}.");
                 }
+                
             }
+            
+        
 
             // Comprobamos si se han producido errores en las validaciones.
             if (!ModelState.IsValid)
@@ -413,7 +418,19 @@ namespace AppForSEII.API.Controllers
                 Direccion = compraForCreate.Direccion,
                 Telefono = compraForCreate.TelefonoComprador
             };
-
+            if (!compraForCreate.Direccion.Contains("Calle"))
+            {
+                ModelState.AddModelError(
+                    "CompraItems",
+                    $"¡Error! La direccion de envio debe contener la palabra Calle");
+            }
+             // Comprobamos si se han producido errores en las validaciones.
+            if (!ModelState.IsValid)
+            {
+                // Si existe algún error, devolvemos HTTP 400.
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+            
             // ------------------------------------------------------------
             // 9. CREAR LOS ARTÍCULOS Y ACTUALIZAR EL STOCK
             // ------------------------------------------------------------

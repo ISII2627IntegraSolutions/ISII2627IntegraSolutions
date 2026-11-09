@@ -244,7 +244,7 @@ namespace AppForSEII.UT.ComprasController_test
                 {
                     new CompraItemDTO(
                         99,
-                        "Libro inexistente",
+                        "Libro Inexistente",
                         "Novela",
                         "Alfaguara",
                         19.95m,
@@ -254,6 +254,31 @@ namespace AppForSEII.UT.ComprasController_test
                 // Proporcionamos el correo necesario para GooglePay.
                 EmailGooglePay = "peter@uclm.es"
             };
+            // CASO 6: el cliente selecciona un libro que no existe.
+            // El identificador 99 no está registrado en la base de datos.
+            var direccionInvalida = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "C/ Falsa 123",
+                "612345600",
+                "GooglePay",
+                "DEMO01",
+                new List<CompraItemDTO>()
+                {
+                    new CompraItemDTO(
+                        1,
+                        "Cien años de soledad",
+                        "Novela",
+                        "Alfaguara",
+                        19.95m,
+                        2)
+                })
+            {
+                // Proporcionamos el correo necesario para GooglePay.
+                EmailGooglePay = "peter@uclm.es"
+            };
+            
 
             // Creamos la lista con todos los casos de prueba.
             // Cada elemento contiene:
@@ -308,7 +333,15 @@ namespace AppForSEII.UT.ComprasController_test
                     libroInexistente,
                     "CompraItems",
                     "No existe el libro con identificador 99."
+                },
+                 // Caso 6: libro inexistente.
+                new object[]
+                {
+                    direccionInvalida,
+                    "CompraItems",
+                    "¡Error! La direccion de envio debe contener la palabra Calle"
                 }
+             
             };
 
             // Devolvemos todos los casos para que xUnit los ejecute.
