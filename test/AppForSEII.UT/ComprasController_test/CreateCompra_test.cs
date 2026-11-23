@@ -134,7 +134,10 @@ namespace AppForSEII.UT.ComprasController_test
                 "612345600",
                 "GooglePay",
                 "DEMO01",
-                new List<CompraItemDTO>());
+                new List<CompraItemDTO>())
+            {
+                EmailGooglePay = "peter@uclm.es"
+            };
 
             // CASO 2: el cliente selecciona un método de pago no permitido.
             // Bitcoin no está entre los métodos admitidos por el controlador.
@@ -157,7 +160,10 @@ namespace AppForSEII.UT.ComprasController_test
                         "Alfaguara",
                         19.95m,
                         2)
-                });
+                })
+            {
+                EmailGooglePay = "peter@uclm.es"
+            };
 
             // CASO 3: el usuario que intenta comprar no está registrado.
             // Utilizamos un correo que no existe en nuestra base de datos.
@@ -178,7 +184,10 @@ namespace AppForSEII.UT.ComprasController_test
                         "Alfaguara",
                         19.95m,
                         2)
-                });
+                })
+            {
+                EmailGooglePay = "peter@uclm.es"
+            };
 
             // CASO 4: el cliente solicita más unidades de las disponibles.
             // El libro tiene 12 unidades, pero se solicitan 13.
@@ -254,7 +263,7 @@ namespace AppForSEII.UT.ComprasController_test
                 // Proporcionamos el correo necesario para GooglePay.
                 EmailGooglePay = "peter@uclm.es"
             };
-            // CASO 6: el cliente selecciona un libro que no existe.
+            // CASO 7: el cliente selecciona un libro que no existe.
             // El identificador 99 no está registrado en la base de datos.
             var direccionInvalida = new CompraForCreateDTO(
                 "peter@uclm.es",
@@ -278,7 +287,105 @@ namespace AppForSEII.UT.ComprasController_test
                 // Proporcionamos el correo necesario para GooglePay.
                 EmailGooglePay = "peter@uclm.es"
             };
-            
+            // CASO 8: Visa sin número de tarjeta.
+            var visaSinNumero = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "Visa",
+                "DEMO04",
+                new List<CompraItemDTO>()
+                {
+        new CompraItemDTO(
+            1,
+            "Cien años de soledad",
+            "Novela",
+            "Alfaguara",
+            19.95m,
+            2)
+                })
+            {
+                NumeroTarjeta = null,
+                FechaCaducidad = new DateTime(2030, 12, 31)
+            };
+            // CASO 9: Visa con fecha de caducidad vencida.
+            var visaFechaCaducada = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "Visa",
+                "DEMO05",
+                new List<CompraItemDTO>()
+                {
+        new CompraItemDTO(
+            1,
+            "Cien años de soledad",
+            "Novela",
+            "Alfaguara",
+            19.95m,
+            2)
+                })
+            {
+                NumeroTarjeta = "4111111111111111",
+                FechaCaducidad = DateTime.Today.AddDays(-1)
+            };
+            // CASO 10: PayPal sin teléfono.
+            var paypalSinTelefono = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "PayPal",
+                "DEMO06",
+                new List<CompraItemDTO>()
+                {
+        new CompraItemDTO(
+            1,
+            "Cien años de soledad",
+            "Novela",
+            "Alfaguara",
+            19.95m,
+            2)
+                })
+            {
+                TelefonoPayPal = null
+            };
+            // CASO 11: se intenta añadir dos veces el mismo libro.
+            var librosRepetidos = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "GooglePay",
+                "DEMO07",
+                new List<CompraItemDTO>()
+                {
+        new CompraItemDTO(
+            1,
+            "Cien años de soledad",
+            "Novela",
+            "Alfaguara",
+            19.95m,
+            2),
+
+        new CompraItemDTO(
+            1,
+            "Cien años de soledad",
+            "Novela",
+            "Alfaguara",
+            19.95m,
+            3)
+                })
+            {
+                EmailGooglePay = "peter@uclm.es"
+            };
+
 
             // Creamos la lista con todos los casos de prueba.
             // Cada elemento contiene:
@@ -334,14 +441,41 @@ namespace AppForSEII.UT.ComprasController_test
                     "CompraItems",
                     "No existe el libro con identificador 99."
                 },
-                 // Caso 6: libro inexistente.
+                 // Caso 7: direccion invalida.
                 new object[]
                 {
                     direccionInvalida,
                     "CompraItems",
                     "¡Error! La direccion de envio debe contener la palabra Calle"
+                },
+                // Caso 8: Visa sin número de tarjeta.
+                new object[]
+                {
+                    visaSinNumero,
+                    "NumeroTarjeta",
+                    "Debes introducir el número de tarjeta."
+                },
+                // Caso 9: Visa con fecha de caducidad vencida.
+                new object[]
+                {
+                    visaFechaCaducada,
+                    "FechaCaducidad",
+                    "Debes introducir una fecha de caducidad válida."
+                },
+                // Caso 10: PayPal sin teléfono.
+                new object[]
+                {
+                    paypalSinTelefono,
+                    "TelefonoPayPal",
+                    "Debes introducir el teléfono de PayPal."
+                },
+                // Caso 11: se intenta añadir dos veces el mismo libro.
+                new object[]
+                {
+                    librosRepetidos,
+                    "CompraItems",
+                    "Hay libros repetidos. Indica la cantidad en un único artículo."
                 }
-             
             };
 
             // Devolvemos todos los casos para que xUnit los ejecute.
@@ -432,6 +566,14 @@ namespace AppForSEII.UT.ComprasController_test
 
             // Creamos el controlador que queremos probar.
             var controller = new ComprasController(_context, logger);
+            // Creamos el DTO con los datos de un CompraItem válido.
+            var compraItemDTO = new CompraItemDTO(
+                1,
+                "Cien años de soledad",
+                "Novela",
+                "Alfaguara",
+                19.95m,
+                2);
 
             // Creamos el DTO con los datos de una compra válida.
             var compraDTO = new CompraForCreateDTO(
@@ -444,14 +586,7 @@ namespace AppForSEII.UT.ComprasController_test
                 "DEMO01",
                 new List<CompraItemDTO>()
                 {
-                    // El cliente compra dos unidades del libro con Id 1.
-                    new CompraItemDTO(
-                        1,
-                        "Cien años de soledad",
-                        "Novela",
-                        "Alfaguara",
-                        19.95m,
-                        2)
+                    compraItemDTO
                 })
             {
                 // Indicamos el correo asociado al pago con GooglePay.
@@ -484,6 +619,19 @@ namespace AppForSEII.UT.ComprasController_test
             var compraDetailDTOReal =
                 Assert.IsType<ComprasDetailDTO>(createdResult.Value);
 
+            // Construimos el DTO esperado con los datos que debe devolver el POST.
+            var DetailDTOEsperado = new ComprasDetailDTO(
+                1,
+                compraDetailDTOReal.FechaCompra,
+                compraDTO.CustomerUserName,
+                compraDTO.NombreComprador,
+                compraDTO.ApellidoComprador,
+                compraDTO.Direccion,
+                compraDTO.TelefonoComprador,
+                compraDTO.MetodoDePago,
+                compraDTO.CodigoDescuento,
+                compraDTO.CompraItems);
+
             // Comprobamos que la fecha de compra esté comprendida
             // entre el instante anterior y el posterior a la operación.
             Assert.InRange(
@@ -494,21 +642,7 @@ namespace AppForSEII.UT.ComprasController_test
             // Comprobamos que todos los datos comunes del DTO de entrada
             // coincidan con los datos devueltos por el controlador.
             // Para ello se utiliza el Equals implementado en CompraForCreateDTO.
-            Assert.Equal(compraDTO, compraDetailDTOReal);
-
-            // Comprobamos que el artículo devuelto tenga todos
-            // los datos esperados: Id, título, género, editorial,
-            // precio y cantidad.
-            // Se utiliza Equals implementado en CompraItemDTO.
-            Assert.Equal(
-                new CompraItemDTO(
-                    1,
-                    "Cien años de soledad",
-                    "Novela",
-                    "Alfaguara",
-                    19.95m,
-                    2),
-                compraDetailDTOReal.CompraItems[0]);
+            Assert.Equal(DetailDTOEsperado, compraDetailDTOReal);
 
             // Comprobamos que el libro sigue existiendo en la base de datos
             // y recuperamos su información actualizada.
@@ -530,5 +664,102 @@ namespace AppForSEII.UT.ComprasController_test
             // Esperamos encontrar exactamente un ComprarItem.
             Assert.Equal(1, _context.Set<ComprarItem>().Count());
         }
+        [Fact]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateCompra_Visa_Success_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<ComprasController>>();
+            ILogger<ComprasController> logger = mock.Object;
+
+            var controller = new ComprasController(_context, logger);
+
+            var compraDTO = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "Visa",
+                "DEMO02",
+                new List<CompraItemDTO>()
+                {
+            new CompraItemDTO(
+                1,
+                "Cien años de soledad",
+                "Novela",
+                "Alfaguara",
+                19.95m,
+                2)
+                })
+            {
+                NumeroTarjeta = "4111111111111111",
+                FechaCaducidad = new DateTime(2030, 12, 31)
+            };
+
+            // Act
+            var result = await controller.CreateCompra(compraDTO);
+
+            // Assert
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+
+            var compraDetailDTOReal =
+                Assert.IsType<ComprasDetailDTO>(createdResult.Value);
+
+            Assert.Equal("Visa", compraDetailDTOReal.MetodoDePago);
+
+            Assert.Equal(1, _context.Compras.Count());
+        }
+
+        [Fact]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateCompra_PayPal_Success_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<ComprasController>>();
+            ILogger<ComprasController> logger = mock.Object;
+
+            var controller = new ComprasController(_context, logger);
+
+            var compraDTO = new CompraForCreateDTO(
+                "peter@uclm.es",
+                "Peter",
+                "Jackson",
+                "Calle Falsa 123",
+                "612345600",
+                "PayPal",
+                "DEMO03",
+                new List<CompraItemDTO>()
+                {
+            new CompraItemDTO(
+                1,
+                "Cien años de soledad",
+                "Novela",
+                "Alfaguara",
+                19.95m,
+                2)
+                })
+            {
+                TelefonoPayPal = "612345600"
+            };
+
+            // Act
+            var result = await controller.CreateCompra(compraDTO);
+
+            // Assert
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+
+            var compraDetailDTOReal =
+                Assert.IsType<ComprasDetailDTO>(createdResult.Value);
+
+            Assert.Equal("PayPal", compraDetailDTOReal.MetodoDePago);
+
+            Assert.Equal(1, _context.Compras.Count());
+        }
+
+
     }
+
 }
