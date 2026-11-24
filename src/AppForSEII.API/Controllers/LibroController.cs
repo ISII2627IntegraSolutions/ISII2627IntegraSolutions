@@ -38,60 +38,6 @@ namespace AppForSEII.API.Controllers
         }
 
         // HTTP GET:
-        // Permite ejecutar el método mediante una petición GET.
-        [HttpGet]
-
-        // Utiliza el nombre del método como parte de la ruta.
-        // Ruta: api/Libro/ComputeDivison
-        [Route("[action]")]
-
-        // Indicamos que puede devolver un decimal con HTTP 200.
-        [ProducesResponseType(typeof(decimal), (int)HttpStatusCode.OK)]
-
-        // Indicamos que puede devolver un mensaje de error con HTTP 400.
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> ComputeDivison(decimal op1, decimal op2)
-        {
-            // Comprobamos que el divisor no sea cero.
-            if (op2 == 0)
-            {
-                // Registramos el error en el logger.
-                _logger.LogError($"{DateTime.Now} Exception: op2=0, division by 0");
-
-                // Devolvemos BadRequest (HTTP 400).
-                return BadRequest("op2 cannot be 0");
-            }
-
-            // Realizamos la división y redondeamos el resultado
-            // a dos posiciones decimales.
-            decimal result = decimal.Round(op1 / op2, 2);
-
-            // Devolvemos el resultado con HTTP 200.
-            return Ok(result);
-        }
-
-        // HTTP GET:
-        // Permite obtener todos los libros de la base de datos.
-        [HttpGet]
-        [Route("[action]")]
-
-        // Indicamos que devuelve una lista de libros con HTTP 200.
-        [ProducesResponseType(typeof(IList<Libro>), (int)HttpStatusCode.OK)]
-
-        // Indicamos que puede devolver un error HTTP 400.
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> GetLibros()
-        {
-            // Consultamos todos los libros almacenados.
-            // ToListAsync ejecuta la consulta de forma asíncrona
-            // y convierte el resultado en una lista.
-            IList<Libro> libros = await _context.Libros.ToListAsync();
-
-            // Devolvemos la lista de libros con HTTP 200.
-            return Ok(libros);
-        }
-
-        // HTTP GET:
         // Obtiene los libros disponibles para realizar una compra.
         [HttpGet]
         [Route("[action]")]
