@@ -210,8 +210,6 @@ namespace AppForSEII.UT.ComprasController_test
             // coincidan con los datos devueltos por el controlador.
             // Equals compara las propiedades implementadas en ComprasDetailDTO
             // y, mediante su clase base, las propiedades de CompraForCreateDTO.
-            var eq = expectedCompra.Equals(compraDTOActual);
-
             // Assert.Equal utiliza Equals para comparar ambos DTO.
             // Si los datos no coinciden, la prueba falla.
             Assert.Equal(expectedCompra, compraDTOActual);

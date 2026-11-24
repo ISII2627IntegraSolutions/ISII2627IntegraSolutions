@@ -67,31 +67,52 @@ namespace AppForSEII.API.DTOs.ComprarLibrosDTOs
         // Solo para PayPal
         [Phone]
         public string? TelefonoPayPal { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is CompraForCreateDTO dTO &&
-            CustomerUserName == dTO.CustomerUserName &&
-            NombreComprador == dTO.NombreComprador &&
-            ApellidoComprador == dTO.ApellidoComprador &&
-            Direccion == dTO.Direccion &&
-            TelefonoComprador == dTO.TelefonoComprador &&
-            MetodoDePago == dTO.MetodoDePago &&
-            CodigoDescuento == dTO.CodigoDescuento &&
-            CompraItems.SequenceEqual(dTO.CompraItems) &&
-            PrecioTotal == dTO.PrecioTotal;
+                   CustomerUserName == dTO.CustomerUserName &&
+                   NombreComprador == dTO.NombreComprador &&
+                   ApellidoComprador == dTO.ApellidoComprador &&
+                   Direccion == dTO.Direccion &&
+                   TelefonoComprador == dTO.TelefonoComprador &&
+                   MetodoDePago == dTO.MetodoDePago &&
+                   CodigoDescuento == dTO.CodigoDescuento &&
+                   CompraItems.SequenceEqual(dTO.CompraItems) &&
+                   PrecioTotal == dTO.PrecioTotal &&
+                   NumeroTarjeta == dTO.NumeroTarjeta &&
+                   FechaCaducidad == dTO.FechaCaducidad &&
+                   EmailGooglePay == dTO.EmailGooglePay &&
+                   TelefonoPayPal == dTO.TelefonoPayPal;
         }
+
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(
-                CustomerUserName,
-                NombreComprador,
-                ApellidoComprador,
-                Direccion,
-                TelefonoComprador,
-                MetodoDePago,
-                CodigoDescuento,
-                PrecioTotal);
+            var hash = new HashCode();
+
+            hash.Add(CustomerUserName);
+            hash.Add(NombreComprador);
+            hash.Add(ApellidoComprador);
+            hash.Add(Direccion);
+            hash.Add(TelefonoComprador);
+            hash.Add(MetodoDePago);
+            hash.Add(CodigoDescuento);
+            hash.Add(PrecioTotal);
+
+            foreach (var item in CompraItems)
+            {
+                hash.Add(item);
+            }
+
+            hash.Add(NumeroTarjeta);
+            hash.Add(FechaCaducidad);
+            hash.Add(EmailGooglePay);
+            hash.Add(TelefonoPayPal);
+
+            return hash.ToHashCode();
         }
+
 
 
 
